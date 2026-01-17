@@ -2,19 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="Background" Value="{StaticResource AnimeGradientPurple}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Padding" Value="20,12"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Effect" Value="{StaticResource ShadowEffectGlow}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" 
-                           CornerRadius="8" 
-                           Padding="{TemplateBinding Padding}">
+                           CornerRadius="10" 
+                           Padding="{TemplateBinding Padding}"
+                           BorderThickness="2"
+                           BorderBrush="{StaticResource AnimePurpleBright}">
                         <ContentPresenter HorizontalAlignment="Center" 
                                          VerticalAlignment="Center"/>
                     </Border>
@@ -23,17 +26,18 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
+                <Setter Property="Background" Value="{StaticResource AnimeGradientPurple}"/>
+                <Setter Property="Effect" Value="{StaticResource ShadowEffectStrong}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
+                <Setter Property="Background" Value="{StaticResource AnimePurpleDark}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="IconButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{StaticResource TextLightBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource AnimeTextMuted}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -41,8 +45,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" 
-                           CornerRadius="4" 
-                           Padding="5">
+                           CornerRadius="6" 
+                           Padding="8"
+                           BorderThickness="1"
+                           BorderBrush="Transparent">
                         <ContentPresenter HorizontalAlignment="Center" 
                                          VerticalAlignment="Center"/>
                     </Border>
@@ -51,8 +57,40 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource BorderBrush}"/>
-                <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
+                <Setter Property="Background" Value="{StaticResource AnimePurple}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Effect" Value="{StaticResource ShadowEffect}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AnimeDarkGray}"/>
+        <Setter Property="Foreground" Value="{StaticResource AnimeText}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="15,10"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AnimePurple}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" 
+                           CornerRadius="8" 
+                           Padding="{TemplateBinding Padding}"
+                           BorderThickness="{TemplateBinding BorderThickness}"
+                           BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AnimePurple}"/>
+                <Setter Property="Foreground" Value="White"/>
             </Trigger>
         </Style.Triggers>
     </Style>

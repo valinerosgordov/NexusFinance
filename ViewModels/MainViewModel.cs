@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FinancialPlanner.ViewModels
 {
@@ -403,7 +404,12 @@ namespace FinancialPlanner.ViewModels
             if (budget == null) return 0;
 
             var spent = GetCategoryTotal(category);
-            return budget.Amount > 0 ? (spent / budget.Amount) * 100 : 0;
+            // Конвертируем потраченное в валюту бюджета
+            if (budget.Currency != BaseCurrency)
+            {
+                spent = _currencyService.ConvertCurrency(spent, BaseCurrency, budget.Currency);
+            }
+            return budget.Amount > 0 ? Math.Min((spent / budget.Amount) * 100, 100) : 0;
         }
     }
 }

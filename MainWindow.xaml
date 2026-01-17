@@ -7,8 +7,8 @@
         xmlns:models="clr-namespace:FinancialPlanner.Models"
         xmlns:converters="clr-namespace:FinancialPlanner.Converters"
         mc:Ignorable="d"
-        Title="Финансовый Планировщик и Daily Tracker" 
-        Height="800" Width="1200"
+        Title="✨ Финансовый Планировщик - Anime Edition ✨" 
+        Height="900" Width="1400"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}">
     <Window.Resources>
@@ -16,6 +16,8 @@
         <converters:TransactionBorderConverter x:Key="TransactionBorderConverter"/>
         <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
         <converters:StrikeThroughConverter x:Key="StrikeThroughConverter"/>
+        <converters:BudgetProgressConverter x:Key="BudgetProgressConverter"/>
+        <converters:CategoryTotalConverter x:Key="CategoryTotalConverter"/>
     </Window.Resources>
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -27,34 +29,59 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="20">
+        <!-- Anime Style Header -->
+        <Border Grid.Row="0" Background="{StaticResource AnimeGradientPurple}" Padding="25" Effect="{StaticResource ShadowEffectStrong}">
             <StackPanel>
-                <TextBlock Text="💰 Финансовый Планировщик" 
-                          FontSize="28" FontWeight="Bold" 
-                          Foreground="White" Margin="0,0,0,10"/>
+                <TextBlock Text="✨ Финансовый Планировщик ✨" 
+                          FontSize="32" FontWeight="Bold" 
+                          Foreground="White" 
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,15"
+                          Effect="{StaticResource ShadowEffectGlow}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Доходы" FontSize="12" Foreground="White" Opacity="0.9"/>
-                        <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:C}'}" 
-                                  FontSize="20" FontWeight="Bold" Foreground="White"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Text="Расходы" FontSize="12" Foreground="White" Opacity="0.9"/>
-                        <TextBlock Text="{Binding TotalExpenses, StringFormat='{}{0:C}'}" 
-                                  FontSize="20" FontWeight="Bold" Foreground="White"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Баланс" FontSize="12" Foreground="White" Opacity="0.9"/>
-                        <TextBlock Text="{Binding Balance, StringFormat='{}{0:C}'}" 
-                                  FontSize="20" FontWeight="Bold" 
-                                  Foreground="{Binding Balance, Converter={StaticResource BalanceColorConverter}}"/>
-                    </StackPanel>
+                    <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="10" Padding="15" Margin="5"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurpleBright}">
+                        <StackPanel>
+                            <TextBlock Text="💰 Доходы" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:N2} ₽'}" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="10" Padding="15" Margin="5"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurpleBright}">
+                        <StackPanel>
+                            <TextBlock Text="💸 Расходы" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding TotalExpenses, StringFormat='{}{0:N2} ₽'}" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="10" Padding="15" Margin="5"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurpleBright}">
+                        <StackPanel>
+                            <TextBlock Text="⚖️ Баланс" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding Balance, StringFormat='{}{0:N2} ₽'}" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{Binding Balance, Converter={StaticResource BalanceColorConverter}}"/>
+                        </StackPanel>
+                    </Border>
+                    <ComboBox Grid.Column="3" 
+                             SelectedItem="{Binding BaseCurrency}"
+                             ItemsSource="{Binding AvailableCurrencies}"
+                             DisplayMemberPath="Code"
+                             SelectedValuePath="Code"
+                             Width="100" Margin="5"
+                             Style="{StaticResource ComboBoxStyle}"/>
                 </Grid>
             </StackPanel>
         </Border>
@@ -67,25 +94,26 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="TabItem">
                                 <Border Name="Border" Background="Transparent" 
-                                       BorderThickness="0" Padding="20,10">
+                                       BorderThickness="0" Padding="25,12" Margin="5,0">
                                     <ContentPresenter ContentSource="Header" 
                                                     HorizontalAlignment="Center" 
                                                     VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource AnimeGradientPurple}"/>
                                         <Setter Property="Foreground" Value="White"/>
+                                        <Setter TargetName="Border" Property="Effect" Value="{StaticResource ShadowEffectGlow}"/>
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="False">
-                                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource AnimeText}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                     <Setter Property="FontSize" Value="16"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
             </TabControl.Resources>
 
@@ -95,21 +123,23 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="350"/>
+                        <ColumnDefinition Width="380"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Transactions List -->
-                    <Border Grid.Column="0" Background="White" 
-                           CornerRadius="10" Padding="15" 
-                           Effect="{StaticResource ShadowEffect}">
+                    <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="20" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="Транзакции" 
-                                      FontSize="20" FontWeight="Bold" 
+                            <TextBlock Grid.Row="0" Text="📋 Транзакции" 
+                                      FontSize="24" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
                                       Margin="0,0,0,15"/>
 
                             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -117,9 +147,10 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type models:Transaction}">
                                             <Border Background="{Binding Type, Converter={StaticResource TransactionColorConverter}}" 
-                                                   CornerRadius="8" Padding="15" Margin="0,0,0,10"
-                                                   BorderThickness="0,0,4,0"
-                                                   BorderBrush="{Binding Type, Converter={StaticResource TransactionBorderConverter}}">
+                                                   CornerRadius="10" Padding="18" Margin="0,0,0,12"
+                                                   BorderThickness="0,0,5,0"
+                                                   BorderBrush="{Binding Type, Converter={StaticResource TransactionBorderConverter}}"
+                                                   Effect="{StaticResource ShadowEffect}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -128,22 +159,40 @@
                                                     </Grid.ColumnDefinitions>
                                                     <StackPanel Grid.Column="0">
                                                         <TextBlock Text="{Binding Description}" 
-                                                                  FontSize="16" FontWeight="SemiBold"/>
+                                                                  FontSize="17" FontWeight="SemiBold"
+                                                                  Foreground="{StaticResource AnimeText}"/>
                                                         <TextBlock Text="{Binding Category}" 
-                                                                  FontSize="12" Opacity="0.7" Margin="0,5,0,0"/>
-                                                        <TextBlock Text="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
-                                                                  FontSize="11" Opacity="0.6" Margin="0,2,0,0"/>
+                                                                  FontSize="13" 
+                                                                  Foreground="{StaticResource AnimeTextMuted}" 
+                                                                  Margin="0,6,0,0"/>
+                                                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                            <TextBlock Text="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
+                                                                      FontSize="11" 
+                                                                      Foreground="{StaticResource AnimeTextMuted}"/>
+                                                            <TextBlock Text=" • " 
+                                                                      FontSize="11" 
+                                                                      Foreground="{StaticResource AnimeTextMuted}"/>
+                                                            <TextBlock Text="{Binding Currency}" 
+                                                                      FontSize="11" 
+                                                                      Foreground="{StaticResource AnimePurpleBright}"/>
+                                                        </StackPanel>
                                                     </StackPanel>
                                                     <TextBlock Grid.Column="1" 
-                                                              Text="{Binding Amount, StringFormat='{}{0:C}'}" 
-                                                              FontSize="18" FontWeight="Bold"
-                                                              Margin="15,0"/>
+                                                              Text="{Binding Amount, StringFormat='{}{0:N2}'}" 
+                                                              FontSize="20" FontWeight="Bold"
+                                                              Foreground="{StaticResource AnimeText}"
+                                                              Margin="20,0"/>
+                                                    <TextBlock Grid.Column="1" 
+                                                              Text="{Binding Currency}" 
+                                                              FontSize="12"
+                                                              Foreground="{StaticResource AnimeTextMuted}"
+                                                              Margin="20,25,0,0"/>
                                                     <Button Grid.Column="2" 
                                                            Content="✕" 
                                                            Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                            CommandParameter="{Binding}"
                                                            Style="{StaticResource IconButtonStyle}"
-                                                           Width="30" Height="30"/>
+                                                           Width="32" Height="32" FontSize="16"/>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -154,14 +203,17 @@
                     </Border>
 
                     <!-- Add Transaction Form -->
-                    <Border Grid.Column="2" Background="White" 
-                           CornerRadius="10" Padding="20" 
-                           Effect="{StaticResource ShadowEffect}">
+                    <Border Grid.Column="2" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
                         <StackPanel>
-                            <TextBlock Text="Новая транзакция" 
-                                      FontSize="20" FontWeight="Bold" 
+                            <TextBlock Text="➕ Новая транзакция" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
                                       Margin="0,0,0,20"/>
 
+                            <TextBlock Text="Тип" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
                             <ComboBox SelectedItem="{Binding NewTransactionType}" 
                                      Margin="0,0,0,15" 
                                      Style="{StaticResource ComboBoxStyle}">
@@ -171,22 +223,31 @@
                                 </ComboBox.Items>
                             </ComboBox>
 
+                            <TextBlock Text="Описание" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
                             <TextBox Text="{Binding NewTransactionDescription}" 
                                     Style="{StaticResource TextBoxStyle}"
-                                    Margin="0,0,0,15"
-                                    Tag="Описание"/>
+                                    Margin="0,0,0,15"/>
 
+                            <TextBlock Text="Сумма" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
                             <TextBox Text="{Binding NewTransactionAmount}" 
                                     Style="{StaticResource TextBoxStyle}"
-                                    Margin="0,0,0,15"
-                                    Tag="Сумма"/>
+                                    Margin="0,0,0,15"/>
 
-                            <TextBox Text="{Binding NewTransactionCategory}" 
-                                    Style="{StaticResource TextBoxStyle}"
-                                    Margin="0,0,0,20"
-                                    Tag="Категория"/>
+                            <TextBlock Text="Категория" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedItem="{Binding NewTransactionCategory}"
+                                     ItemsSource="{Binding Categories}"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,15"/>
 
-                            <Button Content="Добавить" 
+                            <TextBlock Text="Валюта" FontSize="14" Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedItem="{Binding NewTransactionCurrency}"
+                                     ItemsSource="{Binding AvailableCurrencies}"
+                                     DisplayMemberPath="Code"
+                                     SelectedValuePath="Code"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,20"/>
+
+                            <Button Content="✨ Добавить" 
                                    Command="{Binding AddTransactionCommand}"
                                    Style="{StaticResource PrimaryButtonStyle}"/>
                         </StackPanel>
@@ -200,13 +261,14 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="350"/>
+                        <ColumnDefinition Width="380"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Daily Entry Content -->
-                    <Border Grid.Column="0" Background="White" 
-                           CornerRadius="10" Padding="20" 
-                           Effect="{StaticResource ShadowEffect}">
+                    <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -217,34 +279,43 @@
 
                             <TextBlock Grid.Row="0" 
                                       Text="{Binding SelectedDailyEntry.Date, StringFormat='{}{0:dd MMMM yyyy}'}" 
-                                      FontSize="24" FontWeight="Bold" 
+                                      FontSize="28" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
                                       Margin="0,0,0,20"/>
 
                             <!-- Mood -->
-                            <StackPanel Grid.Row="1" Margin="0,0,0,20">
-                                <TextBlock Text="Настроение" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <StackPanel Grid.Row="1" Margin="0,0,0,25">
+                                <TextBlock Text="😊 Настроение" FontSize="18" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeText}" Margin="0,0,0,12"/>
                                 <Slider Value="{Binding DailyMood}" 
                                        Minimum="1" Maximum="10" 
                                        TickFrequency="1" IsSnapToTickEnabled="True"
                                        Style="{StaticResource SliderStyle}"/>
                                 <TextBlock Text="{Binding DailyMood}" 
-                                         FontSize="18" FontWeight="Bold" 
+                                         FontSize="24" FontWeight="Bold" 
                                          HorizontalAlignment="Center" 
-                                         Foreground="{StaticResource PrimaryBrush}"/>
+                                         Foreground="{StaticResource AnimePurpleBright}"
+                                         Margin="0,8,0,0"/>
                             </StackPanel>
 
                             <!-- Habits -->
-                            <StackPanel Grid.Row="2" Margin="0,0,0,20">
-                                <TextBlock Text="Привычки" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <StackPanel Grid.Row="2" Margin="0,0,0,25">
+                                <TextBlock Text="🎯 Привычки" FontSize="18" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeText}" Margin="0,0,0,12"/>
                                 <ItemsControl ItemsSource="{Binding SelectedDailyEntry.Habits}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <CheckBox Content="{Binding HabitName}" 
-                                                     IsChecked="{Binding IsCompleted}"
-                                                     Command="{Binding DataContext.ToggleHabitCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                     CommandParameter="{Binding}"
-                                                     FontSize="14" Margin="0,5"
-                                                     Style="{StaticResource CheckBoxStyle}"/>
+                                            <Border Background="{StaticResource AnimeDarkGray}" 
+                                                   CornerRadius="8" Padding="12" Margin="0,0,0,8"
+                                                   BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
+                                                <CheckBox Content="{Binding HabitName}" 
+                                                         IsChecked="{Binding IsCompleted}"
+                                                         Command="{Binding DataContext.ToggleHabitCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                         CommandParameter="{Binding}"
+                                                         FontSize="15" 
+                                                         Foreground="{StaticResource AnimeText}"
+                                                         Style="{StaticResource CheckBoxStyle}"/>
+                                            </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -252,13 +323,15 @@
 
                             <!-- Tasks -->
                             <StackPanel Grid.Row="3">
-                                <TextBlock Text="Задачи" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                                <TextBlock Text="✅ Задачи" FontSize="18" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeText}" Margin="0,0,0,12"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="350">
                                     <ItemsControl ItemsSource="{Binding SelectedDailyEntry.Tasks}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Background="{StaticResource LightBackgroundBrush}" 
-                                                       CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                                                <Border Background="{StaticResource AnimeDarkGray}" 
+                                                       CornerRadius="10" Padding="15" Margin="0,0,0,10"
+                                                       BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto"/>
@@ -269,17 +342,18 @@
                                                                  IsChecked="{Binding IsCompleted}"
                                                                  Command="{Binding DataContext.ToggleTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                  CommandParameter="{Binding}"
-                                                                 Margin="0,0,10,0"/>
+                                                                 Margin="0,0,12,0"/>
                                                         <TextBlock Grid.Column="1" 
                                                                   Text="{Binding Description}" 
-                                                                  FontSize="14"
+                                                                  FontSize="15"
+                                                                  Foreground="{StaticResource AnimeText}"
                                                                   TextDecorations="{Binding IsCompleted, Converter={StaticResource StrikeThroughConverter}}"/>
                                                         <Button Grid.Column="2" 
                                                                Content="✕" 
                                                                Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                CommandParameter="{Binding}"
                                                                Style="{StaticResource IconButtonStyle}"
-                                                               Width="24" Height="24"/>
+                                                               Width="28" Height="28"/>
                                                     </Grid>
                                                 </Border>
                                             </DataTemplate>
@@ -291,89 +365,448 @@
                     </Border>
 
                     <!-- Side Panel -->
-                    <Border Grid.Column="2" Background="White" 
-                           CornerRadius="10" Padding="20" 
-                           Effect="{StaticResource ShadowEffect}">
-                        <StackPanel>
-                            <TextBlock Text="Управление" 
-                                      FontSize="20" FontWeight="Bold" 
-                                      Margin="0,0,0,20"/>
+                    <Border Grid.Column="2" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ Управление" 
+                                          FontSize="22" FontWeight="Bold" 
+                                          Foreground="{StaticResource AnimeText}"
+                                          Margin="0,0,0,20"/>
 
-                            <!-- Notes -->
-                            <TextBlock Text="Заметки" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                            <TextBox Text="{Binding DailyNotes}" 
-                                    Style="{StaticResource TextBoxStyle}"
-                                    TextWrapping="Wrap" 
-                                    AcceptsReturn="True"
-                                    Height="100"
-                                    Margin="0,0,0,20"
-                                    Tag="Ваши заметки..."/>
-
-                            <!-- Add Habit -->
-                            <TextBlock Text="Новая привычка" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                            <Grid Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" 
-                                        Text="{Binding NewHabitName}" 
+                                <!-- Notes -->
+                                <TextBlock Text="📝 Заметки" FontSize="16" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,10"/>
+                                <TextBox Text="{Binding DailyNotes}" 
                                         Style="{StaticResource TextBoxStyle}"
-                                        Tag="Название привычки"/>
-                                <Button Grid.Column="1" 
-                                       Content="+" 
-                                       Command="{Binding AddHabitCommand}"
-                                       Style="{StaticResource IconButtonStyle}"
-                                       Width="40" Height="40" Margin="10,0,0,0"/>
-                            </Grid>
+                                        TextWrapping="Wrap" 
+                                        AcceptsReturn="True"
+                                        Height="120"
+                                        Margin="0,0,0,20"/>
 
-                            <!-- Habits List -->
-                            <TextBlock Text="Все привычки" FontSize="14" FontWeight="SemiBold" Margin="0,10,0,10"/>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="150">
-                                <ItemsControl ItemsSource="{Binding AvailableHabits}">
+                                <!-- Add Habit -->
+                                <TextBlock Text="➕ Новая привычка" FontSize="16" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,10"/>
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" 
+                                            Text="{Binding NewHabitName}" 
+                                            Style="{StaticResource TextBoxStyle}"/>
+                                    <Button Grid.Column="1" 
+                                           Content="+" 
+                                           Command="{Binding AddHabitCommand}"
+                                           Style="{StaticResource IconButtonStyle}"
+                                           Width="45" Height="45" Margin="10,0,0,0" FontSize="20"/>
+                                </Grid>
+
+                                <!-- Habits List -->
+                                <TextBlock Text="📋 Все привычки" FontSize="16" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeTextSecondary}" Margin="0,10,0,10"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="180">
+                                    <ItemsControl ItemsSource="{Binding AvailableHabits}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{StaticResource AnimeDarkGray}" 
+                                                       CornerRadius="8" Padding="12" Margin="0,0,0,8"
+                                                       BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
+                                                    <Grid>
+                                                        <TextBlock Text="{Binding}" FontSize="14" 
+                                                                  Foreground="{StaticResource AnimeText}"/>
+                                                        <Button HorizontalAlignment="Right" 
+                                                               Content="✕" 
+                                                               Command="{Binding DataContext.DeleteHabitCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               CommandParameter="{Binding}"
+                                                               Style="{StaticResource IconButtonStyle}"
+                                                               Width="24" Height="24"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <!-- Add Task -->
+                                <TextBlock Text="➕ Новая задача" FontSize="16" FontWeight="SemiBold" 
+                                          Foreground="{StaticResource AnimeTextSecondary}" Margin="0,20,0,10"/>
+                                <Grid Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" 
+                                            Text="{Binding NewTaskDescription}" 
+                                            Style="{StaticResource TextBoxStyle}"/>
+                                    <Button Grid.Column="1" 
+                                           Content="+" 
+                                           Command="{Binding AddTaskCommand}"
+                                           Style="{StaticResource IconButtonStyle}"
+                                           Width="45" Height="45" Margin="10,0,0,0" FontSize="20"/>
+                                </Grid>
+
+                                <Button Content="💾 Сохранить" 
+                                       Command="{Binding SaveDailyEntryCommand}"
+                                       Style="{StaticResource PrimaryButtonStyle}"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- Конвертер валют Tab -->
+            <TabItem Header="💱 Конвертер валют">
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Converter -->
+                    <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="30" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                        <StackPanel>
+                            <TextBlock Text="💱 Конвертер валют" 
+                                      FontSize="28" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
+                                      HorizontalAlignment="Center"
+                                      Margin="0,0,0,30"/>
+
+                            <TextBlock Text="Из валюты" FontSize="16" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" 
+                                      Margin="0,0,0,10"/>
+                            <ComboBox SelectedItem="{Binding CurrencyFrom}"
+                                     ItemsSource="{Binding AvailableCurrencies}"
+                                     DisplayMemberPath="Code"
+                                     SelectedValuePath="Code"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,20"/>
+
+                            <TextBlock Text="Сумма" FontSize="16" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" 
+                                      Margin="0,0,0,10"/>
+                            <TextBox Text="{Binding CurrencyAmount}" 
+                                    Style="{StaticResource TextBoxStyle}"
+                                    FontSize="20"
+                                    Margin="0,0,0,30"/>
+
+                            <TextBlock Text="В валюту" FontSize="16" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" 
+                                      Margin="0,0,0,10"/>
+                            <ComboBox SelectedItem="{Binding CurrencyTo}"
+                                     ItemsSource="{Binding AvailableCurrencies}"
+                                     DisplayMemberPath="Code"
+                                     SelectedValuePath="Code"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,30"/>
+
+                            <Border Background="{StaticResource AnimeGradientPurple}" 
+                                   CornerRadius="12" Padding="25"
+                                   Effect="{StaticResource ShadowEffectGlow}">
+                                <StackPanel>
+                                    <TextBlock Text="Результат" FontSize="18" 
+                                              Foreground="White" Opacity="0.9"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding ConvertedAmount, StringFormat='{}{0:N2}'}" 
+                                              FontSize="36" FontWeight="Bold" 
+                                              Foreground="White"
+                                              HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CurrencyTo}" 
+                                              FontSize="20" 
+                                              Foreground="White" Opacity="0.8"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Currency List -->
+                    <Border Grid.Column="2" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                        <StackPanel>
+                            <TextBlock Text="📊 Доступные валюты" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
+                                      Margin="0,0,0,20"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding AvailableCurrencies}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{StaticResource LightBackgroundBrush}" 
-                                                   CornerRadius="6" Padding="10" Margin="0,0,0,5">
+                                            <Border Background="{StaticResource AnimeDarkGray}" 
+                                                   CornerRadius="10" Padding="15" Margin="0,0,0,10"
+                                                   BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
                                                 <Grid>
-                                                    <TextBlock Text="{Binding}" FontSize="13"/>
-                                                    <Button HorizontalAlignment="Right" 
-                                                           Content="✕" 
-                                                           Command="{Binding DataContext.DeleteHabitCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                           CommandParameter="{Binding}"
-                                                           Style="{StaticResource IconButtonStyle}"
-                                                           Width="20" Height="20"/>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" 
+                                                              Text="{Binding Symbol}" 
+                                                              FontSize="24" 
+                                                              Margin="0,0,15,0"/>
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding Code}" 
+                                                                  FontSize="18" FontWeight="Bold"
+                                                                  Foreground="{StaticResource AnimeText}"/>
+                                                        <TextBlock Text="{Binding Name}" 
+                                                                  FontSize="13"
+                                                                  Foreground="{StaticResource AnimeTextMuted}"/>
+                                                    </StackPanel>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </ScrollViewer>
-
-                            <!-- Add Task -->
-                            <TextBlock Text="Новая задача" FontSize="14" FontWeight="SemiBold" Margin="0,20,0,10"/>
-                            <Grid Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" 
-                                        Text="{Binding NewTaskDescription}" 
-                                        Style="{StaticResource TextBoxStyle}"
-                                        Tag="Описание задачи"/>
-                                <Button Grid.Column="1" 
-                                       Content="+" 
-                                       Command="{Binding AddTaskCommand}"
-                                       Style="{StaticResource IconButtonStyle}"
-                                       Width="40" Height="40" Margin="10,0,0,0"/>
-                            </Grid>
-
-                            <Button Content="Сохранить" 
-                                   Command="{Binding SaveDailyEntryCommand}"
-                                   Style="{StaticResource PrimaryButtonStyle}"
-                                   Margin="0,20,0,0"/>
                         </StackPanel>
                     </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- Бюджеты Tab -->
+            <TabItem Header="💰 Бюджеты">
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="380"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Budgets List -->
+                    <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="📊 Бюджеты" 
+                                      FontSize="24" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
+                                      Margin="0,0,0,20"/>
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Budgets}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{StaticResource AnimeDarkGray}" 
+                                                   CornerRadius="12" Padding="20" Margin="0,0,0,15"
+                                                   BorderThickness="2" BorderBrush="{StaticResource AnimePurple}"
+                                                   Effect="{StaticResource ShadowEffect}">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid Grid.Row="0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0">
+                                                            <TextBlock Text="{Binding Category}" 
+                                                                      FontSize="20" FontWeight="Bold"
+                                                                      Foreground="{StaticResource AnimeText}"/>
+                                                            <TextBlock FontSize="16"
+                                                                      Foreground="{StaticResource AnimeTextMuted}">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="{}{0:N2} {1}">
+                                                                        <Binding Path="Amount"/>
+                                                                        <Binding Path="Currency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1" 
+                                                               Content="✕" 
+                                                               Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               CommandParameter="{Binding}"
+                                                               Style="{StaticResource IconButtonStyle}"
+                                                               Width="32" Height="32"/>
+                                                    </Grid>
+                                                    <ProgressBar Grid.Row="1" 
+                                                                Maximum="100"
+                                                                Height="12" Margin="0,15,0,10"
+                                                                Foreground="{StaticResource AnimePurpleBright}">
+                                                        <ProgressBar.Value>
+                                                            <MultiBinding Converter="{StaticResource BudgetProgressConverter}">
+                                                                <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                                                <Binding Path="Category"/>
+                                                            </MultiBinding>
+                                                        </ProgressBar.Value>
+                                                    </ProgressBar>
+                                                    <TextBlock Grid.Row="2" 
+                                                              FontSize="12"
+                                                              Foreground="{StaticResource AnimeTextMuted}">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0:dd.MM.yyyy} - {1:dd.MM.yyyy}">
+                                                                <Binding Path="StartDate"/>
+                                                                <Binding Path="EndDate"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <!-- Add Budget Form -->
+                    <Border Grid.Column="2" Background="{StaticResource CardBackgroundBrush}" 
+                           CornerRadius="15" Padding="25" 
+                           Effect="{StaticResource ShadowEffect}"
+                           BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                        <StackPanel>
+                            <TextBlock Text="➕ Новый бюджет" 
+                                      FontSize="22" FontWeight="Bold" 
+                                      Foreground="{StaticResource AnimeText}"
+                                      Margin="0,0,0,20"/>
+
+                            <TextBlock Text="Категория" FontSize="14" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedItem="{Binding NewBudgetCategory}"
+                                     ItemsSource="{Binding Categories}"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Сумма" FontSize="14" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
+                            <TextBox Text="{Binding NewBudgetAmount}" 
+                                    Style="{StaticResource TextBoxStyle}"
+                                    Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Валюта" FontSize="14" 
+                                      Foreground="{StaticResource AnimeTextSecondary}" Margin="0,0,0,8"/>
+                            <ComboBox SelectedItem="{Binding NewBudgetCurrency}"
+                                     ItemsSource="{Binding AvailableCurrencies}"
+                                     DisplayMemberPath="Code"
+                                     SelectedValuePath="Code"
+                                     Style="{StaticResource ComboBoxStyle}"
+                                     Margin="0,0,0,20"/>
+
+                            <Button Content="✨ Добавить" 
+                                   Command="{Binding AddBudgetCommand}"
+                                   Style="{StaticResource PrimaryButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- Статистика Tab -->
+            <TabItem Header="📈 Статистика">
+                <Grid Margin="20">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- Categories Statistics -->
+                            <Border Background="{StaticResource CardBackgroundBrush}" 
+                                   CornerRadius="15" Padding="25" Margin="0,0,0,20"
+                                   Effect="{StaticResource ShadowEffect}"
+                                   BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                                <StackPanel>
+                                    <TextBlock Text="📊 Статистика по категориям" 
+                                              FontSize="24" FontWeight="Bold" 
+                                              Foreground="{StaticResource AnimeText}"
+                                              Margin="0,0,0,20"/>
+                                    <ItemsControl ItemsSource="{Binding Categories}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{StaticResource AnimeDarkGray}" 
+                                                       CornerRadius="10" Padding="15" Margin="0,0,0,12"
+                                                       BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" 
+                                                                  FontSize="16" FontWeight="SemiBold"
+                                                                  Foreground="{StaticResource AnimeText}"/>
+                                                        <TextBlock Grid.Column="1" 
+                                                                  FontSize="18" FontWeight="Bold"
+                                                                  Foreground="{StaticResource AnimePurpleBright}">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0:N2} ₽" Converter="{StaticResource CategoryTotalConverter}">
+                                                                    <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                                                    <Binding Path="."/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Category Management -->
+                            <Border Background="{StaticResource CardBackgroundBrush}" 
+                                   CornerRadius="15" Padding="25"
+                                   Effect="{StaticResource ShadowEffect}"
+                                   BorderThickness="2" BorderBrush="{StaticResource AnimePurple}">
+                                <StackPanel>
+                                    <TextBlock Text="🏷️ Управление категориями" 
+                                              FontSize="24" FontWeight="Bold" 
+                                              Foreground="{StaticResource AnimeText}"
+                                              Margin="0,0,0,20"/>
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" 
+                                                Text="{Binding NewCategoryName}" 
+                                                Style="{StaticResource TextBoxStyle}"/>
+                                        <Button Grid.Column="1" 
+                                               Content="➕" 
+                                               Command="{Binding AddCategoryCommand}"
+                                               Style="{StaticResource IconButtonStyle}"
+                                               Width="50" Height="50" Margin="10,0,0,0" FontSize="24"/>
+                                    </Grid>
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                                        <ItemsControl ItemsSource="{Binding Categories}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{StaticResource AnimeDarkGray}" 
+                                                           CornerRadius="8" Padding="12" Margin="0,0,0,8"
+                                                           BorderThickness="1" BorderBrush="{StaticResource AnimePurple}">
+                                                        <Grid>
+                                                            <TextBlock Text="{Binding}" FontSize="14" 
+                                                                      Foreground="{StaticResource AnimeText}"/>
+                                                            <Button HorizontalAlignment="Right" 
+                                                                   Content="✕" 
+                                                                   Command="{Binding DataContext.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                   CommandParameter="{Binding}"
+                                                                   Style="{StaticResource IconButtonStyle}"
+                                                                   Width="24" Height="24"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </TabItem>
         </TabControl>

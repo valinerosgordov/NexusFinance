@@ -25,6 +25,8 @@ namespace FinancialPlanner.Models
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Description { get; set; } = string.Empty;
         public bool IsCompleted { get; set; }
-        public int Priority { get; set; } = 1; // 1-5 scale
+        public int Priority { get; set; } = 3; // 1-5 scale
+        public int XP { get; set; } = 0; // XP за выполнение
+        public bool XPClaimed { get; set; } = false; // Была ли награда получена
     }
 }

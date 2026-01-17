@@ -18,6 +18,7 @@ namespace FinancialPlanner.Services
         private readonly string _habitsFile;
         private readonly string _budgetsFile;
         private readonly string _categoriesFile;
+        private readonly string _levelSystemFile;
 
         public DataService()
         {
@@ -27,6 +28,7 @@ namespace FinancialPlanner.Services
             _habitsFile = Path.Combine(_dataFolder, "habits.json");
             _budgetsFile = Path.Combine(_dataFolder, "budgets.json");
             _categoriesFile = Path.Combine(_dataFolder, "categories.json");
+            _levelSystemFile = Path.Combine(_dataFolder, "level_system.json");
         }
 
         public List<Transaction> LoadTransactions()
@@ -102,6 +104,21 @@ namespace FinancialPlanner.Services
         {
             var json = JsonConvert.SerializeObject(categories, Formatting.Indented);
             File.WriteAllText(_categoriesFile, json);
+        }
+
+        public LevelSystem LoadLevelSystem()
+        {
+            if (!File.Exists(_levelSystemFile))
+                return new LevelSystem();
+
+            var json = File.ReadAllText(_levelSystemFile);
+            return JsonConvert.DeserializeObject<LevelSystem>(json) ?? new LevelSystem();
+        }
+
+        public void SaveLevelSystem(LevelSystem levelSystem)
+        {
+            var json = JsonConvert.SerializeObject(levelSystem, Formatting.Indented);
+            File.WriteAllText(_levelSystemFile, json);
         }
     }
 }
