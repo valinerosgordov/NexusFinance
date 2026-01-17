@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- Аниме фиолетово-черная цветовая палитра -->
+    <SolidColorBrush x:Key="AnimePurpleDark" Color="#1a0d2e"/>      <!-- Очень темный фиолетовый -->
+    <SolidColorBrush x:Key="AnimePurple" Color="#6B46C1"/>           <!-- Основной фиолетовый -->
+    <SolidColorBrush x:Key="AnimePurpleLight" Color="#8B5CF6"/>      <!-- Светлый фиолетовый -->
+    <SolidColorBrush x:Key="AnimePurpleBright" Color="#A78BFA"/>    <!-- Яркий фиолетовый -->
+    <SolidColorBrush x:Key="AnimePurpleAccent" Color="#C4B5FD"/>     <!-- Акцентный фиолетовый -->
+    <SolidColorBrush x:Key="AnimeBlack" Color="#0a0a0a"/>            <!-- Почти черный -->
+    <SolidColorBrush x:Key="AnimeDarkGray" Color="#1a1a1a"/>        <!-- Темно-серый -->
+    <SolidColorBrush x:Key="AnimeGray" Color="#2d2d2d"/>             <!-- Серый -->
+    <SolidColorBrush x:Key="AnimeLightGray" Color="#3d3d3d"/>       <!-- Светло-серый -->
+    <SolidColorBrush x:Key="AnimeText" Color="#E9D5FF"/>            <!-- Светлый текст -->
+    <SolidColorBrush x:Key="AnimeTextSecondary" Color="#C4B5FD"/>   <!-- Вторичный текст -->
+    <SolidColorBrush x:Key="AnimeTextMuted" Color="#A78BFA"/>       <!-- Приглушенный текст -->
+    
+    <!-- Градиенты для аниме эффекта -->
+    <LinearGradientBrush x:Key="AnimeGradientPurple" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#6B46C1" Offset="0"/>
+        <GradientStop Color="#8B5CF6" Offset="0.5"/>
+        <GradientStop Color="#A78BFA" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="AnimeGradientDark" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0a0a0a" Offset="0"/>
+        <GradientStop Color="#1a0d2e" Offset="0.5"/>
+        <GradientStop Color="#2d2d2d" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Основные цвета -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#8B5CF6"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="#6B46C1"/>
+    <SolidColorBrush x:Key="PrimaryLightBrush" Color="#A78BFA"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="#10B981"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="#EF4444"/>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#0a0a0a"/>
+    <SolidColorBrush x:Key="LightBackgroundBrush" Color="#1a1a1a"/>
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1a0d2e"/>
+    <SolidColorBrush x:Key="TextBrush" Color="#E9D5FF"/>
+    <SolidColorBrush x:Key="TextLightBrush" Color="#C4B5FD"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#3d3d3d"/>
+    <SolidColorBrush x:Key="IncomeBrush" Color="#1a3d2e"/>
+    <SolidColorBrush x:Key="ExpenseBrush" Color="#3d1a1a"/>
+
+    <!-- Улучшенные тени для аниме стиля -->
+    <DropShadowEffect x:Key="ShadowEffect" 
+                     Color="#8B5CF6" 
+                     Direction="270" 
+                     ShadowDepth="6" 
+                     BlurRadius="20" 
+                     Opacity="0.3"/>
+    
+    <DropShadowEffect x:Key="ShadowEffectStrong" 
+                     Color="#6B46C1" 
+                     Direction="270" 
+                     ShadowDepth="8" 
+                     BlurRadius="25" 
+                     Opacity="0.5"/>
+    
+    <DropShadowEffect x:Key="ShadowEffectGlow" 
+                     Color="#A78BFA" 
+                     Direction="270" 
+                     ShadowDepth="0" 
+                     BlurRadius="30" 
+                     Opacity="0.4"/>
+
+</ResourceDictionary>
