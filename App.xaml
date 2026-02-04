@@ -1,15 +1,69 @@
-<Application x:Class="FinancialPlanner.App"
+<Application x:Class="NexusFinance.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:NexusFinance.Converters"
+             xmlns:views="clr-namespace:NexusFinance.Views"
+             xmlns:viewModels="clr-namespace:NexusFinance.ViewModels"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Colors.xaml"/>
-                <ResourceDictionary Source="Styles/Buttons.xaml"/>
-                <ResourceDictionary Source="Styles/TextBoxes.xaml"/>
-                <ResourceDictionary Source="Styles/Animations.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+            <!-- Converters -->
+            <converters:AmountToWidthConverter x:Key="AmountToWidthConverter"/>
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            
+            <!-- DataTemplates for automatic View rendering -->
+            <DataTemplate DataType="{x:Type viewModels:DashboardViewModel}">
+                <views:DashboardView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:ProjectAnalyticsViewModel}">
+                <views:ProjectAnalyticsView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:WalletViewModel}">
+                <views:WalletView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:TransactionInputViewModel}">
+                <views:TransactionInputView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+                <views:SettingsView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:NeuralCfoViewModel}">
+                <views:NeuralCfoView/>
+            </DataTemplate>
+            
+            <!-- Global Styles -->
+            <Style TargetType="Button" x:Key="NavButton">
+                <Setter Property="Background" Value="#252526"/>
+                <Setter Property="Foreground" Value="#B0B0B0"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="15"/>
+                <Setter Property="Margin" Value="0,0,0,10"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                   CornerRadius="8" 
+                                   Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2A2A2A"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

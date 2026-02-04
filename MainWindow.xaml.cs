@@ -1,12 +1,13 @@
 using System.Windows;
+using NexusFinance.ViewModels;
 
-namespace FinancialPlanner
+namespace NexusFinance;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        DataContext = new MainViewModel();
     }
 }

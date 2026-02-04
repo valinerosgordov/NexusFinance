@@ -1,8 +1,7 @@
 using System.Windows;
 
-namespace FinancialPlanner
+namespace NexusFinance;
+
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-    }
 }

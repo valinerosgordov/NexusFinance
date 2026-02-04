@@ -1,248 +1,194 @@
-# ✨ Финансовый Планировщик - Anime Edition ✨
+# ⚡ NexusFinance
 
-Красивое приложение на C# WPF для управления финансами и отслеживания ежедневных привычек и задач в стиле аниме с фиолетово-черной цветовой схемой.
+<!-- ![Logo Placeholder](docs/logo.png) -->
 
-![Version](https://img.shields.io/badge/version-2.0-purple)
-![.NET](https://img.shields.io/badge/.NET-8.0-purple)
-![Platform](https://img.shields.io/badge/platform-Windows-purple)
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![WPF](https://img.shields.io/badge/WPF-Native-0078D4?logo=windows)](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## 🎨 Особенности дизайна
+**A high-performance, native Windows desktop application for advanced personal and project financial planning.**
 
-- **Аниме стиль** - Фиолетово-черная цветовая палитра с градиентами
-- **Современный UI** - Плавные переходы, тени с эффектом свечения
-- **Адаптивный интерфейс** - Удобная навигация по вкладкам
-- **Визуальные эффекты** - Анимации и подсветка элементов
-
-## ✨ Основные возможности
-
-### 💵 Финансовый планировщик
-
-#### Управление транзакциями
-- ✅ Добавление доходов и расходов
-- ✅ Категоризация транзакций
-- ✅ Поддержка множественных валют (RUB, USD, EUR, GBP, JPY, CNY, KRW)
-- ✅ Автоматический расчет баланса с конвертацией валют
-- ✅ История всех транзакций с фильтрацией
-- ✅ Визуальное отображение (зеленый для доходов, красный для расходов)
-- ✅ Удаление транзакций
-
-#### Управление категориями
-- ✅ Создание и удаление категорий
-- ✅ Статистика по категориям
-- ✅ Предустановленные категории (Еда, Транспорт, Развлечения и др.)
-
-#### Бюджеты
-- ✅ Создание бюджетов по категориям
-- ✅ Отслеживание прогресса расходов
-- ✅ Визуальные индикаторы прогресса
-- ✅ Поддержка разных валют для бюджетов
-- ✅ Автоматический расчет процента использования бюджета
-
-### 💱 Конвертер валют
-
-- ✅ Конвертация между 7 валютами
-- ✅ Онлайн обновление курсов через API
-- ✅ Оффлайн режим с кэшированными курсами
-- ✅ Автоматический пересчет при изменении суммы
-- ✅ Красивое отображение результата
-- ✅ Список всех доступных валют с символами
-
-### 📅 Daily Tracker
-
-#### Отслеживание настроения
-- ✅ Шкала настроения от 1 до 10
-- ✅ Визуальный слайдер
-- ✅ Сохранение настроения по дням
-
-#### Управление привычками
-- ✅ Создание списка привычек
-- ✅ Отметка выполнения привычек каждый день
-- ✅ История выполнения
-- ✅ Управление списком привычек
-
-#### Задачи на день
-- ✅ Добавление задач
-- ✅ Отметка выполненных задач
-- ✅ Удаление задач
-- ✅ Визуальное отображение выполненных задач (зачеркивание)
-
-#### Заметки
-- ✅ Ежедневные заметки
-- ✅ Многострочный текст
-- ✅ Автоматическое сохранение
-
-### 📈 Статистика
-
-- ✅ Статистика расходов по категориям
-- ✅ Визуальное отображение сумм
-- ✅ Управление категориями
-- ✅ Автоматический расчет в базовой валюте
-
-## 🚀 Установка и запуск
-
-### Требования
-
-- Windows 10/11
-- .NET 8.0 SDK или выше
-- Интернет-соединение (для обновления курсов валют, опционально)
-
-### Сборка проекта
-
-```bash
-# Клонируйте репозиторий
-git clone <repository-url>
-cd financialplanner
-
-# Восстановите зависимости
-dotnet restore
-
-# Соберите проект
-dotnet build
-
-# Запустите приложение
-dotnet run
-```
-
-### Запуск из Visual Studio
-
-1. Откройте `FinancialPlanner.csproj` в Visual Studio 2022
-2. Нажмите `F5` для запуска в режиме отладки
-3. Или `Ctrl+F5` для запуска без отладки
-
-## 📁 Структура проекта
-
-```
-FinancialPlanner/
-├── Models/                      # Модели данных
-│   ├── Transaction.cs          # Транзакции (доходы/расходы)
-│   ├── DailyEntry.cs           # Ежедневные записи
-│   └── Currency.cs             # Валюты и бюджеты
-├── ViewModels/                 # ViewModels для MVVM
-│   └── MainViewModel.cs        # Главная ViewModel
-├── Services/                    # Сервисы
-│   ├── DataService.cs          # Сохранение/загрузка данных
-│   └── CurrencyService.cs     # Конвертер валют и API
-├── Converters/                 # Конвертеры для XAML
-│   └── ValueConverters.cs     # Все конвертеры значений
-├── Styles/                     # Стили и ресурсы
-│   ├── Colors.xaml            # Цветовая палитра (аниме стиль)
-│   ├── Buttons.xaml           # Стили кнопок
-│   └── TextBoxes.xaml        # Стили полей ввода
-├── MainWindow.xaml            # Главное окно
-└── App.xaml                   # Приложение
-```
-
-## 💾 Хранение данных
-
-Все данные сохраняются локально в JSON файлах в папке:
-```
-%AppData%\FinancialPlanner\
-```
-
-### Файлы данных:
-- `transactions.json` - все транзакции
-- `daily_entries.json` - ежедневные записи
-- `habits.json` - список привычек
-- `budgets.json` - бюджеты
-- `categories.json` - категории транзакций
-
-**Важно:** Данные хранятся локально и не синхронизируются между устройствами.
-
-## 🎯 Использование
-
-### Добавление транзакции
-
-1. Перейдите на вкладку **"💵 Финансы"**
-2. В правой панели выберите тип (Доход/Расход)
-3. Введите описание, сумму, категорию и валюту
-4. Нажмите **"✨ Добавить"**
-5. Транзакция появится в списке слева
-
-### Конвертация валют
-
-1. Перейдите на вкладку **"💱 Конвертер валют"**
-2. Выберите исходную валюту
-3. Введите сумму
-4. Выберите целевую валюту
-5. Результат отобразится автоматически
-
-### Создание бюджета
-
-1. Перейдите на вкладку **"💰 Бюджеты"**
-2. В правой панели выберите категорию
-3. Введите сумму бюджета
-4. Выберите валюту
-5. Нажмите **"✨ Добавить"**
-6. Прогресс будет отображаться в списке бюджетов
-
-### Управление привычками
-
-1. Перейдите на вкладку **"📅 Daily Tracker"**
-2. В правой панели введите название новой привычки
-3. Нажмите **"+"** для добавления
-4. Отмечайте привычки каждый день в основном окне
-5. Удаляйте привычки через кнопку **"✕"**
-
-### Добавление задач
-
-1. На вкладке **"📅 Daily Tracker"**
-2. В правой панели введите описание задачи
-3. Нажмите **"+"**
-4. Отмечайте выполненные задачи в основном окне
-5. Удаляйте задачи через кнопку **"✕"**
-
-### Просмотр статистики
-
-1. Перейдите на вкладку **"📈 Статистика"**
-2. Просмотрите статистику расходов по категориям
-3. Управляйте категориями в нижней части
-
-## 🛠 Технологии
-
-- **C#** - основной язык программирования
-- **WPF** - UI фреймворк для Windows
-- **MVVM Toolkit** - паттерн Model-View-ViewModel
-- **Newtonsoft.Json** - сериализация данных
-- **HttpClient** - для работы с API курсов валют
-
-## 🌐 API курсов валют
-
-Приложение использует бесплатный API [exchangerate-api.com](https://www.exchangerate-api.com/) для получения актуальных курсов валют. При отсутствии интернета используются кэшированные курсы или статические значения.
-
-## 🎨 Цветовая схема
-
-### Основные цвета:
-- **AnimePurpleDark** (#1a0d2e) - Очень темный фиолетовый
-- **AnimePurple** (#6B46C1) - Основной фиолетовый
-- **AnimePurpleLight** (#8B5CF6) - Светлый фиолетовый
-- **AnimePurpleBright** (#A78BFA) - Яркий фиолетовый
-- **AnimeBlack** (#0a0a0a) - Почти черный фон
-- **AnimeText** (#E9D5FF) - Светлый текст
-
-## 📝 Лицензия
-
-Этот проект создан для личного использования.
-
-## 🤝 Вклад в проект
-
-Приветствуются любые улучшения и предложения! Создавайте Issues и Pull Requests.
-
-## 📞 Поддержка
-
-При возникновении проблем:
-1. Проверьте, что установлен .NET 8.0 SDK
-2. Убедитесь, что все зависимости установлены (`dotnet restore`)
-3. Проверьте логи ошибок в консоли
-
-## 🔮 Планы на будущее
-
-- [ ] Экспорт данных в Excel/CSV
-- [ ] Графики и диаграммы расходов
-- [ ] Напоминания о бюджетах
-- [ ] Темная/светлая тема (переключение)
-- [ ] Резервное копирование в облако
-- [ ] Мобильная версия
+NexusFinance is a modern **"Quant Terminal"** for developers, freelancers, and solo entrepreneurs who need to manage both **Personal** and **Business/Project finances** in one place. Built with a stunning **Dark/Neon aesthetic** inspired by trading terminals and cyberpunk design.
 
 ---
 
-**Сделано с ❤️ и ✨ аниме эстетикой**
+## ✨ Features
+
+- 📊 **Multi-View Dashboard** – Real-time KPIs for Net Worth, Income, Expenses, and Savings Rate
+- 🚀 **Project Analytics** – Track revenue, costs, and profitability across multiple projects (e.g., NexusAI, FinSync)
+- 👛 **Wallet & Investments** – Monitor bank accounts, crypto holdings, stocks, and real estate investments
+- ➕ **Transaction Input** – Fast, keyboard-optimized data entry with Income/Expense categorization
+- 💎 **Double-Entry Ledger** *(Planned)* – Accounting-grade transaction tracking
+- 📈 **Live Charts** – Beautiful, animated charts powered by LiveCharts2
+- 🌙 **Dark/Neon UI** – Eye-friendly theme with vibrant accent colors (Violet, Green, Red, Cyan, Gold)
+- 🎨 **MVVM Architecture** – Clean separation of concerns using CommunityToolkit.Mvvm
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| [.NET 8](https://dotnet.microsoft.com/) | Runtime Framework | 8.0 |
+| [WPF (Windows Presentation Foundation)](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/) | Native Windows UI | .NET 8 |
+| [CommunityToolkit.Mvvm](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/) | MVVM Framework | 8.3.2 |
+| [MaterialDesignInXamlToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit) | UI Components | 5.1.0 |
+| [LiveCharts2](https://github.com/beto-rodriguez/LiveCharts2) | Data Visualization (SkiaSharp) | 2.0.0-rc4.3 |
+| [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/) | ORM (Planned) | 8.0.11 |
+| [SQLite](https://www.sqlite.org/) | Local Database (Planned) | 3.x |
+| [ClosedXML](https://github.com/ClosedXML/ClosedXML) | Excel Export (Planned) | 0.104.1 |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Windows 10/11** (64-bit)
+- **.NET 8 SDK** – [Download here](https://dotnet.microsoft.com/download/dotnet/8.0)
+- **Visual Studio 2022** or **JetBrains Rider** (recommended for WPF development)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/NexusFinance.git
+   cd NexusFinance
+   ```
+
+2. **Restore dependencies:**
+   ```bash
+   dotnet restore
+   ```
+
+3. **Build the project:**
+   ```bash
+   dotnet build
+   ```
+
+4. **Run the application:**
+   ```bash
+   dotnet run --project NexusFinance.csproj
+   ```
+
+Alternatively, open `financialplanner.sln` in Visual Studio and press **F5**.
+
+---
+
+## 📸 Screenshots
+
+> **Note:** Screenshots will be added soon. The application features a stunning dark/neon UI with multiple views.
+
+<!-- ![Dashboard](docs/screenshots/dashboard.png) -->
+<!-- ![Projects](docs/screenshots/projects.png) -->
+<!-- ![Wallet](docs/screenshots/wallet.png) -->
+
+---
+
+## 🏗️ Project Structure
+
+```
+NexusFinance/
+├── App.xaml                    # Application entry point & global resources
+├── App.xaml.cs                 # Application code-behind
+├── MainWindow.xaml             # Main window layout (sidebar + content area)
+├── MainWindow.xaml.cs          # Main window code-behind
+├── ViewModels/                 # MVVM ViewModels
+│   ├── MainViewModel.cs        # Navigation & active view management
+│   ├── DashboardViewModel.cs   # Dashboard data & logic
+│   ├── ProjectAnalyticsViewModel.cs
+│   ├── WalletViewModel.cs
+│   └── TransactionInputViewModel.cs
+├── Views/                      # XAML User Controls
+│   ├── DashboardView.xaml      # Main dashboard with KPIs & charts
+│   ├── ProjectAnalyticsView.xaml
+│   ├── WalletView.xaml
+│   └── TransactionInputView.xaml
+├── Converters/                 # WPF Value Converters
+│   └── AmountToWidthConverter.cs
+└── NexusFinance.csproj         # Project file
+```
+
+---
+
+## 🎨 Design Philosophy
+
+NexusFinance is built with a **"Developer-First"** mindset:
+
+- **Fast Data Entry:** Keyboard shortcuts and auto-complete for rapid transaction logging.
+- **Information Density:** Show as much data as possible without clutter (inspired by Bloomberg Terminal).
+- **Visual Hierarchy:** Use color psychology – Green (income), Red (expense), Violet (primary), Cyan (business).
+- **Zero Latency:** Native WPF + SkiaSharp rendering for 60fps animations.
+
+---
+
+## 🗺️ Roadmap
+
+### ✅ Phase 1: Core UI (Completed)
+- [x] Dashboard with KPI cards
+- [x] Project Analytics view
+- [x] Wallet & Investments view
+- [x] Transaction Input form
+- [x] Sidebar navigation
+- [x] Dark/Neon theme
+
+### 🚧 Phase 2: Data Layer (In Progress)
+- [ ] SQLite database setup with EF Core
+- [ ] Double-Entry Ledger implementation
+- [ ] Transaction CRUD operations
+- [ ] Project/Category management
+
+### 📅 Phase 3: Advanced Features (Planned)
+- [ ] Excel Import/Export (ClosedXML)
+- [ ] Multi-currency support with live exchange rates
+- [ ] Budget tracking & alerts
+- [ ] Recurring transactions
+- [ ] Monte Carlo risk simulation
+- [ ] AI-powered insights (Semantic Kernel)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+**Coding Standards:**
+- Follow [C# Coding Conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
+- Use MVVM pattern strictly (no logic in code-behind)
+- Use `CommunityToolkit.Mvvm` source generators (`[ObservableProperty]`, `[RelayCommand]`)
+- Enable nullable reference types (`<Nullable>enable</Nullable>`)
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [MaterialDesignInXamlToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit) – Beautiful Material Design components for WPF
+- [LiveCharts2](https://github.com/beto-rodriguez/LiveCharts2) – Amazing data visualization library
+- [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) – Modern MVVM helpers
+- Inspired by Bloomberg Terminal, TradingView, and Cyberpunk aesthetics
+
+---
+
+## 📧 Contact
+
+**Project Maintainer:** [Your Name]  
+**Email:** your.email@example.com  
+**GitHub:** [@yourusername](https://github.com/yourusername)
+
+---
+
+<p align="center">
+  Made with ⚡ and 💜 for the Developer Community
+</p>
