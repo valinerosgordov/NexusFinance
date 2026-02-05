@@ -348,52 +348,29 @@
                            FontSize="12"
                            Padding="15,10"
                            Cursor="Hand">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                   Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent" 
+                                       Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                    VerticalAlignment="Center"
+                                                    TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Foreground" Value="#C0C0C0"/>
                                     </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
                     </Button>
                     
                     <!-- SAVE & NEW (Outline) -->
                     <Button Grid.Column="2"
                            Content="{loc:Translate Key=Btn_SaveNew}" 
-                           Background="Transparent"
-                           Foreground="#C0C0C0"
-                           BorderBrush="#808080"
-                           BorderThickness="1"
-                           Padding="20,10"
-                           FontSize="12"
-                           FontWeight="SemiBold"
-                           Cursor="Hand"
+                           Style="{StaticResource StealthOutlineButton}"
                            IsEnabled="False"
-                           Opacity="0.5">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" 
-                                       BorderBrush="{TemplateBinding BorderBrush}"
-                                       BorderThickness="{TemplateBinding BorderThickness}"
-                                       CornerRadius="6" 
-                                       Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                           Opacity="0.5"/>
                     
                     <!-- EXECUTE (Primary Action - Dark Gradient) -->
                     <Button Grid.Column="4"

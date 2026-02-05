@@ -222,52 +222,9 @@
                     <Button Grid.Column="1"
                            Content="🚀 Send" 
                            Command="{Binding SendQuestionCommand}"
-                           Foreground="Black"
-                           BorderBrush="#808080"
-                           BorderThickness="1"
+                           Style="{StaticResource DarkGradientButton}"
                            Padding="30,15"
-                           FontSize="14"
-                           FontWeight="Bold"
-                           Cursor="Hand"
-                           IsEnabled="{Binding IsAnalyzing, Converter={StaticResource InverseBoolConverter}}">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientStop Color="#E0E0E0" Offset="0"/>
-                                            <GradientStop Color="#C0C0C0" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                   BorderBrush="{TemplateBinding BorderBrush}"
-                                                   BorderThickness="{TemplateBinding BorderThickness}"
-                                                   CornerRadius="6" 
-                                                   Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Color="#FFFFFF" Offset="0"/>
-                                                    <GradientStop Color="#E0E0E0" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                           IsEnabled="{Binding IsAnalyzing, Converter={StaticResource InverseBoolConverter}}"/>
                 </Grid>
             </Grid>
         </Border>

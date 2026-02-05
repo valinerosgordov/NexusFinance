@@ -112,12 +112,16 @@ public partial class DashboardViewModel : ObservableObject
         var accounts = _dataService.GetAccounts();
         var investments = _dataService.GetInvestments();
 
-        // Check if database is empty - load mock data if so
-        var hasData = transactions.Any() || accounts.Any() || investments.Any();
-
-        if (!hasData)
+        // If no data exists, show empty dashboard (no mock data after ClearAllData)
+        if (!transactions.Any() && !accounts.Any() && !investments.Any())
         {
-            LoadMockData();
+            NetWorth = 0;
+            MonthlyIncome = 0;
+            MonthlyExpense = 0;
+            SavingsRate = 0;
+            RecentTransactions = new ObservableCollection<TransactionItem>();
+            TopExpenses = new ObservableCollection<CategoryExpense>();
+            Series = Array.Empty<ISeries>();
             return;
         }
 

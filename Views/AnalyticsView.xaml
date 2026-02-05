@@ -18,37 +18,9 @@
                        HorizontalAlignment="Right"
                        Foreground="Black"
                        BorderBrush="#808080"
-                       BorderThickness="1"
+                       Style="{StaticResource DarkGradientButton}"
                        Padding="15,8"
-                       FontSize="12"
-                       FontWeight="Bold"
-                       Cursor="Hand">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#E0E0E0" Offset="0"/>
-                                        <GradientStop Color="#C0C0C0" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" 
-                                               BorderBrush="{TemplateBinding BorderBrush}"
-                                               BorderThickness="{TemplateBinding BorderThickness}"
-                                               CornerRadius="6" 
-                                               Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
+                       FontSize="12"/>
             </Grid>
 
             <!-- SANKEY DIAGRAM -->
