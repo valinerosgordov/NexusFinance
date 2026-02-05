@@ -263,25 +263,18 @@
                         <TextBlock Text="💹 Financial Performance (Last 6 Months)" 
                                   Style="{StaticResource SectionHeaderStyle}"/>
                         
-                        <!-- Chart Placeholder -->
+                        <!-- LiveCharts2 Chart -->
                         <Border Background="#0A000000" 
                                CornerRadius="8" 
                                Height="350"
                                BorderBrush="#202020"
                                BorderThickness="1">
-                            <Grid>
-                                <TextBlock Text="📊 Main Chart Area" 
-                                          FontSize="14" 
-                                          Foreground="#404040" 
-                                          HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"/>
-                                <TextBlock Text="Net Worth Line (Silver) + Expense Bars (Red)" 
-                                          FontSize="11" 
-                                          Foreground="#303030" 
-                                          HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"
-                                          Margin="0,30,0,0"/>
-                            </Grid>
+                            <lvc:CartesianChart Series="{Binding Series}"
+                                              XAxes="{Binding XAxes}"
+                                              YAxes="{Binding YAxes}"
+                                              TooltipPosition="Hidden"
+                                              Background="Transparent"
+                                              LegendPosition="Hidden"/>
                         </Border>
                     </StackPanel>
                 </Border>
@@ -328,7 +321,7 @@
                                             </Grid.ColumnDefinitions>
                                             
                                             <TextBlock Grid.Column="0" 
-                                                      Text="{Binding Category}" 
+                                                      Text="{Binding Name}" 
                                                       FontSize="12" 
                                                       Foreground="#C0C0C0"
                                                       VerticalAlignment="Center"/>

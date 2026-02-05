@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using NexusFinance.Views;
 
 namespace NexusFinance.ViewModels;
 
@@ -14,62 +15,62 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         // Start with Dashboard
-        CurrentView = new DashboardViewModel();
+        CurrentView = new DashboardView();
     }
 
     [RelayCommand]
     private void NavigateToDashboard()
     {
-        CurrentView = new DashboardViewModel();
+        CurrentView = new DashboardView();
         ActiveView = "Dashboard";
     }
 
     [RelayCommand]
     private void NavigateToProjects()
     {
-        CurrentView = new ProjectAnalyticsViewModel();
+        CurrentView = new ProjectAnalyticsView();
         ActiveView = "Projects";
     }
 
     [RelayCommand]
     private void NavigateToWallet()
     {
-        CurrentView = new WalletViewModel();
+        CurrentView = new WalletView();
         ActiveView = "Wallet";
     }
 
     [RelayCommand]
     private void ShowTransactionInput()
     {
-        CurrentView = new TransactionInputViewModel();
+        CurrentView = new TransactionInputView();
         ActiveView = "Transaction";
     }
 
     [RelayCommand]
     private void NavigateToAnalytics()
     {
-        CurrentView = new AnalyticsViewModel(new Services.DataService());
+        CurrentView = new AnalyticsView();
         ActiveView = "Analytics";
     }
 
     [RelayCommand]
     private void NavigateToLiquidity()
     {
-        CurrentView = new LiquidityViewModel(new Services.DataService());
+        CurrentView = new LiquidityView();
         ActiveView = "Liquidity";
     }
 
     [RelayCommand]
     private void NavigateToSettings()
     {
-        CurrentView = new SettingsViewModel();
+        CurrentView = new SettingsView();
         ActiveView = "Settings";
     }
 
     [RelayCommand]
     private void NavigateToNeuralCfo()
     {
-        CurrentView = new NeuralCfoViewModel();
+        CurrentView = new NeuralCfoView();
         ActiveView = "AI";
     }
 }

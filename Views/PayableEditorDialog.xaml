@@ -16,7 +16,9 @@
             <DropShadowEffect Color="Black" ShadowDepth="4" BlurRadius="10" Opacity="0.5"/>
         </Border.Effect>
         
-        <StackPanel Margin="30">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                     HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="30">
             
             <!-- HEADER -->
             <TextBlock Text="⚠️ Payable (Money I Owe)" 
@@ -177,6 +179,7 @@
                 </Button>
             </Grid>
 
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Border>
 </Window>

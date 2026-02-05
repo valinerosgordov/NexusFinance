@@ -7,9 +7,13 @@ using NexusFinance.Services;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Transaction Input ViewModel - handles income/expense entry.
+/// Implements Clean Architecture with dependency injection.
+/// </summary>
 public partial class TransactionInputViewModel : ObservableObject
 {
-    private readonly DataService _dataService;
+    private readonly IDataService _dataService;
 
     [ObservableProperty]
     private bool _isIncome = false;
@@ -38,10 +42,22 @@ public partial class TransactionInputViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<string> _categories = new();
 
-    public TransactionInputViewModel()
+    public TransactionInputViewModel() : this(ServiceContainer.Instance.DataService)
     {
-        _dataService = new DataService();
-        LoadData();
+    }
+
+    public TransactionInputViewModel(IDataService dataService)
+    {
+        _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+        
+        try
+        {
+            LoadData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "TransactionInputViewModel.Constructor");
+        }
     }
 
     [RelayCommand]
@@ -59,55 +75,90 @@ public partial class TransactionInputViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void Cancel()
+    {
+        ResetForm();
+        SelectedProject = Projects.FirstOrDefault();
+    }
+
+    [RelayCommand]
     private void AddTransaction()
     {
-        if (string.IsNullOrWhiteSpace(Description))
+        try
         {
-            MessageBox.Show("Description is required!", "Validation Error", 
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            // Validation with clear error messages
+            if (string.IsNullOrWhiteSpace(Description))
+            {
+                MessageBox.Show(
+                    "Description is required!", 
+                    Constants.ErrorMessages.ValidationError,
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            if (Amount <= 0)
+            {
+                MessageBox.Show(
+                    "Amount must be greater than zero!", 
+                    Constants.ErrorMessages.ValidationError,
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SelectedCategory))
+            {
+                MessageBox.Show(
+                    "Category is required!", 
+                    Constants.ErrorMessages.ValidationError,
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var transaction = new Transaction
+            {
+                Description = Description.Trim(),
+                Amount = Amount,
+                Date = TransactionDate,
+                Category = SelectedCategory,
+                Project = SelectedProject ?? Constants.ProjectNames.Personal,
+                IsIncome = IsIncome
+            };
+
+            _dataService.AddTransaction(transaction);
+
+            var transactionType = IsIncome ? Constants.TransactionTypes.Income : Constants.TransactionTypes.Expense;
+            MessageBox.Show(
+                $"✅ Transaction Saved!\n\n" +
+                $"Type: {transactionType}\n" +
+                $"Description: {Description}\n" +
+                $"Amount: ₽{Amount:N0}\n" +
+                $"Date: {TransactionDate.ToString(Constants.DateFormats.ShortDate)}\n" +
+                $"Project: {transaction.Project}\n" +
+                $"Category: {SelectedCategory}",
+                Constants.ErrorMessages.Success,
+                MessageBoxButton.OK,
+                MessageBoxImage.Information
+            );
+
+            // Reset form
+            ResetForm();
         }
-
-        if (Amount <= 0)
+        catch (Exception ex)
         {
-            MessageBox.Show("Amount must be greater than zero!", "Validation Error", 
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            GlobalExceptionHandler.Instance.LogError(ex, "TransactionInputViewModel.AddTransaction");
+            MessageBox.Show(
+                $"Failed to save transaction: {ex.Message}",
+                Constants.ErrorMessages.ValidationError,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
+    }
 
-        if (string.IsNullOrWhiteSpace(SelectedCategory))
-        {
-            MessageBox.Show("Category is required!", "Validation Error", 
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        var transaction = new Transaction
-        {
-            Description = Description,
-            Amount = Amount,
-            Date = TransactionDate,
-            Category = SelectedCategory,
-            Project = SelectedProject ?? "Personal",
-            IsIncome = IsIncome
-        };
-
-        _dataService.AddTransaction(transaction);
-
-        MessageBox.Show(
-            $"✅ Transaction Saved!\n\n" +
-            $"Type: {(IsIncome ? "Income" : "Expense")}\n" +
-            $"Description: {Description}\n" +
-            $"Amount: ₽{Amount:N0}\n" +
-            $"Date: {TransactionDate:dd.MM.yyyy}\n" +
-            $"Project: {transaction.Project}\n" +
-            $"Category: {SelectedCategory}",
-            "Success",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information
-        );
-
-        // Reset form
+    private void ResetForm()
+    {
         Description = string.Empty;
         Amount = 0;
         TransactionDate = DateTime.Now;

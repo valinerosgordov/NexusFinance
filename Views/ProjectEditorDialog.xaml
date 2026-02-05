@@ -16,16 +16,28 @@
             <DropShadowEffect Color="Black" ShadowDepth="4" BlurRadius="10" Opacity="0.5"/>
         </Border.Effect>
         
-        <StackPanel Margin="30">
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             
-            <!-- HEADER -->
-            <TextBlock Text="📊 Project Editor" 
-                      FontSize="28" 
-                      FontWeight="Bold" 
-                      Foreground="#E0E0E0" 
-                      Margin="0,0,0,30"/>
+            <!-- SCROLLABLE CONTENT -->
+            <ScrollViewer Grid.Row="0"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Disabled"
+                         Style="{StaticResource StealthScrollViewerStyle}"
+                         Margin="0,0,-10,0">
+                <StackPanel Margin="0,0,10,20">
+                    
+                    <!-- HEADER -->
+                    <TextBlock Text="📊 Project Editor" 
+                              FontSize="28" 
+                              FontWeight="Bold" 
+                              Foreground="#E0E0E0" 
+                              Margin="0,0,0,30"/>
 
-            <!-- PROJECT NAME -->
+                    <!-- PROJECT NAME -->
             <StackPanel Margin="0,0,0,20">
                 <TextBlock Text="Project Name" FontSize="14" Foreground="#AAAAAA" Margin="0,0,0,10"/>
                 <TextBox x:Name="ProjectNameBox"
@@ -84,27 +96,30 @@
                 </TextBox>
             </StackPanel>
 
-            <!-- COST -->
-            <StackPanel Margin="0,0,0,30">
-                <TextBlock Text="Cost (₽)" FontSize="14" Foreground="#AAAAAA" Margin="0,0,0,10"/>
-                <TextBox x:Name="CostBox"
-                        Background="#CC252526"
-                        Foreground="White"
-                        BorderBrush="#505050"
-                        BorderThickness="1"
-                        Padding="15"
-                        FontSize="14"
-                        Text="0">
-                    <TextBox.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
-            </StackPanel>
+                    <!-- COST -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Cost (₽)" FontSize="14" Foreground="#AAAAAA" Margin="0,0,0,10"/>
+                        <TextBox x:Name="CostBox"
+                                Background="#CC252526"
+                                Foreground="White"
+                                BorderBrush="#505050"
+                                BorderThickness="1"
+                                Padding="15"
+                                FontSize="14"
+                                Text="0">
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </StackPanel>
+                    
+                </StackPanel>
+            </ScrollViewer>
 
             <!-- BUTTONS -->
-            <Grid>
+            <Grid Grid.Row="1" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -187,7 +202,7 @@
                     </Button.Template>
                 </Button>
             </Grid>
-
-        </StackPanel>
+            
+        </Grid>
     </Border>
 </Window>

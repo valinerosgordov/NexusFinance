@@ -8,9 +8,13 @@ using NexusFinance.Views;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Project Analytics ViewModel - manages project and team member data.
+/// Implements Clean Architecture with proper dependency injection.
+/// </summary>
 public partial class ProjectAnalyticsViewModel : ObservableObject
 {
-    private readonly DataService _dataService;
+    private readonly IDataService _dataService;
 
     [ObservableProperty]
     private ObservableCollection<string> _projects = new();
@@ -39,10 +43,22 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
     [ObservableProperty]
     private decimal _totalMonthlyPayroll;
 
-    public ProjectAnalyticsViewModel()
+    public ProjectAnalyticsViewModel() : this(ServiceContainer.Instance.DataService)
     {
-        _dataService = new DataService();
-        LoadProjectData();
+    }
+
+    public ProjectAnalyticsViewModel(IDataService dataService)
+    {
+        _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+        
+        try
+        {
+            LoadProjectData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "ProjectAnalyticsViewModel.Constructor");
+        }
     }
 
     [RelayCommand]
@@ -56,13 +72,32 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
     [RelayCommand]
     private void AddProject()
     {
-        var dialog = new ProjectEditorDialog();
-        if (dialog.ShowDialog() == true && dialog.Result != null)
+        try
         {
-            _dataService.AddProject(dialog.Result);
-            LoadProjectData();
-            MessageBox.Show($"Project '{dialog.Result.Name}' added successfully!", "Success", 
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            var dialog = new ProjectEditorDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            
+            if (dialog.ShowDialog() == true && dialog.Result != null)
+            {
+                _dataService.AddProject(dialog.Result);
+                LoadProjectData();
+                MessageBox.Show(
+                    $"Project '{dialog.Result.Name}' added successfully!", 
+                    Constants.ErrorMessages.Success,
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "ProjectAnalyticsViewModel.AddProject");
+            MessageBox.Show(
+                $"Failed to add project: {ex.Message}",
+                Constants.ErrorMessages.ValidationError,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 
@@ -77,7 +112,10 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
         if (project == null)
             return;
 
-        var dialog = new ProjectEditorDialog(project);
+        var dialog = new ProjectEditorDialog(project)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdateProject(projectName, dialog.Result);
@@ -110,29 +148,41 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
 
     private void LoadProjectData()
     {
-        var projectsList = _dataService.GetProjects();
-        
-        // Update projects list
-        Projects = new ObservableCollection<string>(projectsList.Select(p => p.Name));
-        
-        // Update summaries
-        ProjectSummaries = new ObservableCollection<ProjectSummary>(
-            projectsList.Select(p => new ProjectSummary(
-                p.Name,
-                p.Revenue,
-                p.Cost,
-                p.Profit,
-                GetProjectColor(p.Name)
-            ))
-        );
-
-        // Select first project if nothing selected or current selection is invalid
-        if (SelectedProject == null || !Projects.Contains(SelectedProject))
+        try
         {
-            SelectedProject = Projects.FirstOrDefault();
-        }
+            var projectsList = _dataService.GetProjects();
+            
+            // Update projects list (defensive: filter out null/empty names)
+            Projects = new ObservableCollection<string>(
+                projectsList
+                    .Where(p => !string.IsNullOrWhiteSpace(p.Name))
+                    .Select(p => p.Name)
+            );
+            
+            // Update summaries
+            ProjectSummaries = new ObservableCollection<ProjectSummary>(
+                projectsList.Select(p => new ProjectSummary(
+                    p.Name ?? "Unknown",
+                    Math.Max(0, p.Revenue),
+                    Math.Max(0, p.Cost),
+                    p.Profit,
+                    GetProjectColor(p.Name ?? "Unknown")
+                ))
+            );
 
-        UpdateSelectedProjectStats();
+            // Select first project if nothing selected or current selection is invalid
+            if (SelectedProject == null || !Projects.Contains(SelectedProject))
+            {
+                SelectedProject = Projects.FirstOrDefault();
+            }
+
+            UpdateSelectedProjectStats();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "ProjectAnalyticsViewModel.LoadProjectData");
+            // UI will show empty state
+        }
     }
 
     private void UpdateSelectedProjectStats()
@@ -191,7 +241,10 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
             return;
         }
         
-        var dialog = new TeamMemberEditorDialog(SelectedProject);
+        var dialog = new TeamMemberEditorDialog(SelectedProject)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.AddTeamMember(dialog.Result);
@@ -209,7 +262,10 @@ public partial class ProjectAnalyticsViewModel : ObservableObject
         var member = _dataService.GetTeamMembers().FirstOrDefault(tm => tm.Id == id);
         if (member == null) return;
         
-        var dialog = new TeamMemberEditorDialog(SelectedProject, member);
+        var dialog = new TeamMemberEditorDialog(SelectedProject, member)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdateTeamMember(id, dialog.Result);

@@ -5,9 +5,13 @@ using System.Collections.ObjectModel;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Neural CFO ViewModel - AI-powered financial analysis using Google Gemini.
+/// Implements Clean Architecture with dependency injection.
+/// </summary>
 public partial class NeuralCfoViewModel : ObservableObject
 {
-    private readonly GeminiAnalysisService _aiService;
+    private readonly IAiService _aiService;
     private readonly SecureStorageService _secureStorage;
 
     [ObservableProperty]
@@ -25,29 +29,41 @@ public partial class NeuralCfoViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
-    public NeuralCfoViewModel()
+    public NeuralCfoViewModel() 
+        : this(ServiceContainer.Instance.AiService, ServiceContainer.Instance.SecureStorageService)
     {
-        _secureStorage = new SecureStorageService();
-        _aiService = new GeminiAnalysisService(_secureStorage);
+    }
+
+    public NeuralCfoViewModel(IAiService aiService, SecureStorageService secureStorage)
+    {
+        _aiService = aiService ?? throw new ArgumentNullException(nameof(aiService));
+        _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
         
-        CheckConfiguration();
-        
-        // Add welcome message
-        if (IsConfigured)
+        try
         {
-            ChatHistory.Add(new ChatMessage(
-                "🤖 Neural CFO",
-                "I'm your ruthless financial advisor. Ask me to analyze your finances, identify risks, or suggest optimizations. Be specific.",
-                false
-            ));
+            CheckConfiguration();
+            
+            // Add welcome message
+            if (IsConfigured)
+            {
+                ChatHistory.Add(new ChatMessage(
+                    "🤖 Neural CFO",
+                    "I'm your ruthless financial advisor. Ask me to analyze your finances, identify risks, or suggest optimizations. Be specific.",
+                    false
+                ));
+            }
+            else
+            {
+                ChatHistory.Add(new ChatMessage(
+                    "⚠️ System",
+                    "Neural CFO is not configured. Please go to Settings and add your Google Gemini API key.",
+                    false
+                ));
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ChatHistory.Add(new ChatMessage(
-                "⚠️ System",
-                "Neural CFO is not configured. Please go to Settings and add your Google Gemini API key.",
-                false
-            ));
+            GlobalExceptionHandler.Instance.LogError(ex, "NeuralCfoViewModel.Constructor");
         }
     }
 

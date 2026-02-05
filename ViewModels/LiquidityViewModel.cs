@@ -7,9 +7,13 @@ using NexusFinance.Services;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Liquidity ViewModel - manages payables, receivables, and cash flow.
+/// Implements Clean Architecture with dependency injection.
+/// </summary>
 public partial class LiquidityViewModel : ObservableObject
 {
-    private readonly DataService _dataService;
+    private readonly IDataService _dataService;
     
     [ObservableProperty]
     private ObservableCollection<PayableViewModel> _payables = new();
@@ -30,7 +34,7 @@ public partial class LiquidityViewModel : ObservableObject
     private decimal _projectedBalance;
     
     [ObservableProperty]
-    private string _projectedBalanceColor = "#E0E0E0";
+    private string _projectedBalanceColor = Constants.Colors.NeutralGray;
     
     [ObservableProperty]
     private int _overduePayablesCount;
@@ -38,51 +42,76 @@ public partial class LiquidityViewModel : ObservableObject
     [ObservableProperty]
     private int _criticalPayablesCount;
     
-    public LiquidityViewModel(DataService dataService)
+    public LiquidityViewModel() : this(ServiceContainer.Instance.DataService)
     {
-        _dataService = dataService;
-        LoadLiquidityData();
+    }
+
+    public LiquidityViewModel(IDataService dataService)
+    {
+        _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+        
+        try
+        {
+            LoadLiquidityData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "LiquidityViewModel.Constructor");
+        }
     }
     
     private void LoadLiquidityData()
     {
-        // Load current cash from accounts
-        var accounts = _dataService.GetAccounts();
-        CurrentCash = accounts.Sum(a => a.Balance);
-        
-        // Load payables
-        var payables = _dataService.GetPayables();
-        Payables = new ObservableCollection<PayableViewModel>(
-            payables
-                .Where(p => !p.IsPaid)
-                .OrderBy(p => p.DueDate)
-                .Select(p => new PayableViewModel(p))
-        );
-        
-        TotalPayables = Payables.Sum(p => p.Amount);
-        OverduePayablesCount = payables.Count(p => !p.IsPaid && p.UrgencyLevel == "Overdue");
-        CriticalPayablesCount = payables.Count(p => !p.IsPaid && (p.UrgencyLevel == "Critical" || p.UrgencyLevel == "High"));
-        
-        // Load receivables
-        var receivables = _dataService.GetReceivables();
-        Receivables = new ObservableCollection<ReceivableViewModel>(
-            receivables
-                .Where(r => !r.IsReceived)
-                .OrderBy(r => r.ExpectedDate)
-                .Select(r => new ReceivableViewModel(r))
-        );
-        
-        TotalReceivables = Receivables.Sum(r => r.WeightedAmount);
-        
-        // Calculate projected balance
-        ProjectedBalance = CurrentCash + TotalReceivables - TotalPayables;
-        ProjectedBalanceColor = ProjectedBalance < 0 ? "#FF5252" : "#00C853";
+        try
+        {
+            // Load current cash from accounts (defensive: ensure no negative balances)
+            var accounts = _dataService.GetAccounts();
+            CurrentCash = accounts.Sum(a => Math.Max(0, a.Balance));
+            
+            // Load payables
+            var payables = _dataService.GetPayables();
+            Payables = new ObservableCollection<PayableViewModel>(
+                payables
+                    .Where(p => !p.IsPaid)
+                    .OrderBy(p => p.DueDate)
+                    .Select(p => new PayableViewModel(p))
+            );
+            
+            TotalPayables = Payables.Sum(p => Math.Max(0, p.Amount));
+            OverduePayablesCount = payables.Count(p => !p.IsPaid && p.UrgencyLevel == "Overdue");
+            CriticalPayablesCount = payables.Count(p => !p.IsPaid && 
+                (p.UrgencyLevel == "Critical" || p.UrgencyLevel == "High"));
+            
+            // Load receivables
+            var receivables = _dataService.GetReceivables();
+            Receivables = new ObservableCollection<ReceivableViewModel>(
+                receivables
+                    .Where(r => !r.IsReceived)
+                    .OrderBy(r => r.ExpectedDate)
+                    .Select(r => new ReceivableViewModel(r))
+            );
+            
+            TotalReceivables = Receivables.Sum(r => Math.Max(0, r.WeightedAmount));
+            
+            // Calculate projected balance
+            ProjectedBalance = CurrentCash + TotalReceivables - TotalPayables;
+            ProjectedBalanceColor = ProjectedBalance < 0 
+                ? Constants.Colors.CriticalRed 
+                : Constants.Colors.IncomeGreen;
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "LiquidityViewModel.LoadLiquidityData");
+        }
     }
     
     [RelayCommand]
     private void AddPayable()
     {
-        var dialog = new Views.PayableEditorDialog();
+        var dialog = new Views.PayableEditorDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.AddPayable(dialog.Result);
@@ -100,7 +129,10 @@ public partial class LiquidityViewModel : ObservableObject
         var payable = _dataService.GetPayables().FirstOrDefault(p => p.Id == id);
         if (payable == null) return;
         
-        var dialog = new Views.PayableEditorDialog(payable);
+        var dialog = new Views.PayableEditorDialog(payable)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdatePayable(id, dialog.Result);
@@ -148,7 +180,10 @@ public partial class LiquidityViewModel : ObservableObject
     private void AddReceivable()
     {
         var projects = _dataService.GetProjects().ToList();
-        var dialog = new Views.ReceivableEditorDialog(projects);
+        var dialog = new Views.ReceivableEditorDialog(projects)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.AddReceivable(dialog.Result);
@@ -167,7 +202,10 @@ public partial class LiquidityViewModel : ObservableObject
         if (receivable == null) return;
         
         var projects = _dataService.GetProjects().ToList();
-        var dialog = new Views.ReceivableEditorDialog(projects, receivable);
+        var dialog = new Views.ReceivableEditorDialog(projects, receivable)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdateReceivable(id, dialog.Result);
@@ -214,7 +252,19 @@ public partial class LiquidityViewModel : ObservableObject
     [RelayCommand]
     private void Refresh()
     {
-        LoadLiquidityData();
+        try
+        {
+            LoadLiquidityData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "LiquidityViewModel.Refresh");
+            MessageBox.Show(
+                $"Failed to refresh liquidity data: {ex.Message}",
+                Constants.ErrorMessages.ValidationError,
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
     }
 }
 

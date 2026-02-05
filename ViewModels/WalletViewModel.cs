@@ -6,9 +6,13 @@ using NexusFinance.Services;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Wallet ViewModel - manages accounts and investments.
+/// Implements Clean Architecture with dependency injection.
+/// </summary>
 public partial class WalletViewModel : ObservableObject
 {
-    private readonly DataService _dataService;
+    private readonly IDataService _dataService;
 
     [ObservableProperty]
     private ObservableCollection<WalletAccount> _accounts = new();
@@ -25,22 +29,49 @@ public partial class WalletViewModel : ObservableObject
     [ObservableProperty]
     private decimal _totalReturn;
 
-    public WalletViewModel()
+    public WalletViewModel() : this(ServiceContainer.Instance.DataService)
     {
-        _dataService = new DataService();
-        LoadWalletData();
+    }
+
+    public WalletViewModel(IDataService dataService)
+    {
+        _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
+        
+        try
+        {
+            LoadWalletData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "WalletViewModel.Constructor");
+        }
     }
 
     [RelayCommand]
     public void Refresh()
     {
-        LoadWalletData();
+        try
+        {
+            LoadWalletData();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "WalletViewModel.Refresh");
+            MessageBox.Show(
+                $"Failed to refresh wallet data: {ex.Message}",
+                Constants.ErrorMessages.ValidationError,
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
     }
 
     [RelayCommand]
     private void AddAccount()
     {
-        var dialog = new Views.AccountEditorDialog();
+        var dialog = new Views.AccountEditorDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.AddAccount(dialog.Result);
@@ -61,7 +92,10 @@ public partial class WalletViewModel : ObservableObject
         if (account == null)
             return;
 
-        var dialog = new Views.AccountEditorDialog(account);
+        var dialog = new Views.AccountEditorDialog(account)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdateAccount(accountName, dialog.Result);
@@ -95,7 +129,10 @@ public partial class WalletViewModel : ObservableObject
     [RelayCommand]
     private void AddInvestment()
     {
-        var dialog = new Views.InvestmentEditorDialog();
+        var dialog = new Views.InvestmentEditorDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.AddInvestment(dialog.Result);
@@ -116,7 +153,10 @@ public partial class WalletViewModel : ObservableObject
         if (investment == null)
             return;
 
-        var dialog = new Views.InvestmentEditorDialog(investment);
+        var dialog = new Views.InvestmentEditorDialog(investment)
+        {
+            Owner = Application.Current.MainWindow
+        };
         if (dialog.ShowDialog() == true && dialog.Result != null)
         {
             _dataService.UpdateInvestment(investmentName, dialog.Result);

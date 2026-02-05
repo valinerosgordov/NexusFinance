@@ -4,9 +4,26 @@
              xmlns:converters="clr-namespace:NexusFinance.Converters"
              xmlns:views="clr-namespace:NexusFinance.Views"
              xmlns:viewModels="clr-namespace:NexusFinance.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MATERIALDESIGN - BASE THEME -->
+                <materialDesign:BundledTheme BaseTheme="Dark" 
+                                            PrimaryColor="Blue" 
+                                            SecondaryColor="Cyan" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- OVERRIDE: Kill the Violet - Force Titanium Silver -->
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#B0B0B0"/>
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#050505"/>
+            <SolidColorBrush x:Key="SecondaryHueMidBrush" Color="#607D8B"/>
+            <SolidColorBrush x:Key="SecondaryHueMidForegroundBrush" Color="White"/>
+            <SolidColorBrush x:Key="MaterialDesignTextBoxBorder" Color="#505050"/>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#C0C0C0"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#909090"/>
             <!-- Converters -->
             <converters:AmountToWidthConverter x:Key="AmountToWidthConverter"/>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
@@ -146,6 +163,176 @@
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="BorderThickness" Value="0"/>
             </Style>
+            
+            <!-- STEALTH SCROLLBAR STYLE -->
+            <Style x:Key="StealthScrollBarThumb" TargetType="{x:Type Thumb}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border Background="#404040" CornerRadius="4"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="StealthScrollBarThumbHover" TargetType="{x:Type Thumb}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border Background="#606060" CornerRadius="4"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="StealthScrollbarStyle" TargetType="{x:Type ScrollBar}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Width" Value="8"/>
+                <Setter Property="MinWidth" Value="8"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid>
+                                <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource StealthScrollBarThumb}" Margin="0"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="PART_Track" Property="Thumb">
+                                        <Setter.Value>
+                                            <Thumb Style="{StaticResource StealthScrollBarThumbHover}" Margin="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- STEALTH SCROLLVIEWER STYLE -->
+            <Style x:Key="StealthScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <ScrollContentPresenter Grid.Column="0" Grid.Row="0"/>
+                                
+                                <ScrollBar x:Name="PART_VerticalScrollBar"
+                                          Grid.Column="1"
+                                          Grid.Row="0"
+                                          Style="{StaticResource StealthScrollbarStyle}"
+                                          Orientation="Vertical"
+                                          Value="{TemplateBinding VerticalOffset}"
+                                          Maximum="{TemplateBinding ScrollableHeight}"
+                                          ViewportSize="{TemplateBinding ViewportHeight}"
+                                          Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- STEALTH BUTTON STYLE - Outlined Silver -->
+            <Style x:Key="StealthOutlineButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#808080"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="15"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   CornerRadius="6" 
+                                   Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#1AFFFFFF"/>
+                        <Setter Property="BorderBrush" Value="#B0B0B0"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <!-- DARK GRADIENT BUTTON STYLE -->
+            <Style x:Key="DarkGradientButton" TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#808080"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="20,12"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#404040" Offset="0"/>
+                            <GradientStop Color="#181818" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="#B0B0B0" ShadowDepth="0" BlurRadius="8" Opacity="0.3"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   CornerRadius="6" 
+                                   Padding="{TemplateBinding Padding}">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#B0B0B0" ShadowDepth="0" BlurRadius="8" Opacity="0.3"/>
+                                </Border.Effect>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#505050" Offset="0"/>
+                                    <GradientStop Color="#282828" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="#C0C0C0" ShadowDepth="0" BlurRadius="12" Opacity="0.5"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

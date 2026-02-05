@@ -215,55 +215,9 @@
                     <!-- SPACER -->
                     <Border Height="40"/>
                     
-                    <!-- ADD TRANSACTION - TITANIUM SILVER GRADIENT -->
+                    <!-- ADD TRANSACTION - STEALTH OUTLINE -->
                     <Button Command="{Binding ShowTransactionInputCommand}"
-                           Foreground="Black"
-                           BorderBrush="#808080"
-                           BorderThickness="1"
-                           Padding="15"
-                           FontSize="14"
-                           FontWeight="Bold"
-                           Cursor="Hand">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientStop Color="#E0E0E0" Offset="0"/>
-                                            <GradientStop Color="#C0C0C0" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                   BorderBrush="{TemplateBinding BorderBrush}"
-                                                   BorderThickness="{TemplateBinding BorderThickness}"
-                                                   CornerRadius="6" 
-                                                   Padding="{TemplateBinding Padding}">
-                                                <Border.Effect>
-                                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="8" Opacity="0.3"/>
-                                                </Border.Effect>
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Color="#FFFFFF" Offset="0"/>
-                                                    <GradientStop Color="#E0E0E0" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                           Style="{StaticResource StealthOutlineButton}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock Text="➕" FontSize="16" Margin="0,0,8,0"/>
                             <TextBlock Text="Add Transaction"/>

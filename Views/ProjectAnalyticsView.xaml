@@ -516,12 +516,22 @@
                     </DataGrid>
                     
                     <!-- EMPTY STATE -->
-                    <TextBlock Text="No team members yet. Click ➕ Add Member to build your team."
-                              FontSize="13"
+                    <TextBlock FontSize="13"
                               Foreground="#505050"
                               HorizontalAlignment="Center"
-                              Margin="0,30,0,0"
-                              Visibility="{Binding TeamMembers.Count, Converter={StaticResource ZeroToVisibleConverter}}"/>
+                              Margin="0,30,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TeamMembers.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="Text" Value="No team members yet. Click ➕ Add Member to build your team."/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     
                 </StackPanel>
             </Border>

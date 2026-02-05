@@ -45,57 +45,61 @@
         
         <Border Style="{StaticResource GlassPanelStyle}" 
                MaxWidth="700" 
-               MaxHeight="500"
+               MaxHeight="700"
                VerticalAlignment="Center"
                HorizontalAlignment="Center"
                Padding="30">
             
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <!-- Header -->
-                    <RowDefinition Height="Auto"/> <!-- Smart Command Bar -->
-                    <RowDefinition Height="*"/>    <!-- Main Form Grid -->
+                    <RowDefinition Height="*"/>    <!-- Scrollable Content -->
                     <RowDefinition Height="Auto"/> <!-- Footer Actions -->
                 </Grid.RowDefinitions>
                 
-                <!-- HEADER -->
-                <TextBlock Grid.Row="0" 
-                          FontSize="22" 
-                          FontWeight="Bold" 
-                          Foreground="#E0E0E0" 
-                          Margin="0,0,0,20">
-                    <Run Text="⚡ "/>
-                    <Run Text="{loc:Translate Key=Transaction_Title}"/>
-                </TextBlock>
-                
-                <!-- SMART COMMAND BAR -->
-                <Border Grid.Row="1" 
-                       Background="#20FFFFFF" 
-                       CornerRadius="8" 
-                       Padding="15"
-                       Margin="0,0,0,25"
-                       BorderBrush="#404040"
-                       BorderThickness="1">
-                    <Grid>
-                        <TextBox x:Name="SmartInputBox"
-                                Background="Transparent"
-                                Foreground="#C0C0C0"
-                                BorderThickness="0"
-                                FontSize="13"
-                                FontFamily="Consolas"
-                                Text="Magic Input: '12500 AWS Server #NexusAI' (Future feature)"
-                                IsEnabled="False"/>
-                        <TextBlock Text="🪄" 
-                                  FontSize="16" 
-                                  HorizontalAlignment="Right" 
-                                  VerticalAlignment="Center"
-                                  Margin="0,0,5,0"
-                                  Opacity="0.3"/>
-                    </Grid>
-                </Border>
-                
-                <!-- MAIN FORM GRID -->
-                <Grid Grid.Row="2">
+                <!-- SCROLLABLE CONTENT -->
+                <ScrollViewer Grid.Row="0"
+                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Disabled"
+                            Style="{StaticResource StealthScrollViewerStyle}"
+                            Margin="0,0,-10,0">
+                    <StackPanel Margin="0,0,10,20">
+                        
+                        <!-- HEADER -->
+                        <TextBlock FontSize="22" 
+                                  FontWeight="Bold" 
+                                  Foreground="#E0E0E0" 
+                                  Margin="0,0,0,20">
+                            <Run Text="⚡ "/>
+                            <Run Text="{loc:Translate Key=Transaction_Title}"/>
+                        </TextBlock>
+                        
+                        <!-- SMART COMMAND BAR -->
+                        <Border Background="#20FFFFFF" 
+                               CornerRadius="8" 
+                               Padding="15"
+                               Margin="0,0,0,25"
+                               BorderBrush="#404040"
+                               BorderThickness="1">
+                            <Grid>
+                                <TextBox x:Name="SmartInputBox"
+                                        Background="Transparent"
+                                        Foreground="#C0C0C0"
+                                        BorderThickness="0"
+                                        FontSize="13"
+                                        FontFamily="Consolas"
+                                        Text="Magic Input: '12500 AWS Server #NexusAI' (Future feature)"
+                                        IsEnabled="False"/>
+                                <TextBlock Text="🪄" 
+                                          FontSize="16" 
+                                          HorizontalAlignment="Right" 
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,5,0"
+                                          Opacity="0.3"/>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- MAIN FORM GRID -->
+                        <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/> <!-- Left: Hard Data -->
                         <ColumnDefinition Width="20"/>
@@ -105,118 +109,128 @@
                     <!-- LEFT COLUMN: HARD DATA -->
                     <StackPanel Grid.Column="0">
                         
-                        <!-- TRANSACTION TYPE -->
+                        <!-- TRANSACTION TYPE - SEGMENTED CONTROL -->
                         <TextBlock Text="{loc:Translate Key=Transaction_Type}" Style="{StaticResource SectionLabelStyle}"/>
-                        <Grid Margin="0,0,0,20">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            
-                            <RadioButton Grid.Column="0"
-                                        x:Name="IncomeRadio"
-                                        Content="{loc:Translate Key=Transaction_Income}"
-                                        GroupName="TransactionType"
-                                        Foreground="#00C853"
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Padding="12,10"
-                                        HorizontalContentAlignment="Center"
-                                        IsChecked="{Binding IsIncome}">
-                                <RadioButton.Style>
-                                    <Style TargetType="RadioButton">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="RadioButton">
-                                                    <Border Background="#0A000000" 
-                                                           BorderBrush="#404040"
-                                                           BorderThickness="1"
-                                                           CornerRadius="6"
-                                                           Padding="{TemplateBinding Padding}">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                                        <Setter Property="Background" Value="#1A00C853"/>
-                                                                        <Setter Property="BorderBrush" Value="#00C853"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </RadioButton.Style>
-                            </RadioButton>
-                            
-                            <RadioButton Grid.Column="2"
-                                        x:Name="ExpenseRadio"
-                                        Content="{loc:Translate Key=Transaction_Expense}"
-                                        GroupName="TransactionType"
-                                        Foreground="#D50000"
-                                        FontSize="12"
-                                        FontWeight="SemiBold"
-                                        Padding="12,10"
-                                        HorizontalContentAlignment="Center">
-                                <RadioButton.Style>
-                                    <Style TargetType="RadioButton">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="RadioButton">
-                                                    <Border Background="#0A000000" 
-                                                           BorderBrush="#404040"
-                                                           BorderThickness="1"
-                                                           CornerRadius="6"
-                                                           Padding="{TemplateBinding Padding}">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                                        <Setter Property="Background" Value="#1AD50000"/>
-                                                                        <Setter Property="BorderBrush" Value="#D50000"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </RadioButton.Style>
-                            </RadioButton>
-                        </Grid>
+                        <Border Background="#0A000000" 
+                               CornerRadius="8" 
+                               Padding="4"
+                               Margin="0,0,0,20"
+                               BorderBrush="#404040"
+                               BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <RadioButton Grid.Column="0"
+                                            x:Name="IncomeRadio"
+                                            Content="{loc:Translate Key=Transaction_Income}"
+                                            GroupName="TransactionType"
+                                            Foreground="#808080"
+                                            FontSize="12"
+                                            FontWeight="SemiBold"
+                                            Padding="12,8"
+                                            HorizontalContentAlignment="Center"
+                                            IsChecked="{Binding IsIncome}">
+                                    <RadioButton.Style>
+                                        <Style TargetType="RadioButton">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="RadioButton">
+                                                        <Border Background="Transparent" 
+                                                               CornerRadius="6"
+                                                               Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                            <Setter Property="Background" Value="#C0C0C0"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </RadioButton.Style>
+                                </RadioButton>
+                                
+                                <RadioButton Grid.Column="1"
+                                            x:Name="ExpenseRadio"
+                                            Content="{loc:Translate Key=Transaction_Expense}"
+                                            GroupName="TransactionType"
+                                            Foreground="#808080"
+                                            FontSize="12"
+                                            FontWeight="SemiBold"
+                                            Padding="12,8"
+                                            HorizontalContentAlignment="Center">
+                                    <RadioButton.Style>
+                                        <Style TargetType="RadioButton">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="RadioButton">
+                                                        <Border Background="Transparent" 
+                                                               CornerRadius="6"
+                                                               Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                            <Setter Property="Background" Value="#C0C0C0"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </RadioButton.Style>
+                                </RadioButton>
+                            </Grid>
+                        </Border>
                         
                         <!-- AMOUNT (BIG) -->
                         <TextBlock Text="{loc:Translate Key=Transaction_Amount}" Style="{StaticResource SectionLabelStyle}"/>
                         <Border Background="#0CFFFFFF" 
                                CornerRadius="8" 
-                               Padding="20,15"
+                               Padding="15,12"
                                Margin="0,0,0,20"
                                BorderBrush="#505050"
                                BorderThickness="1">
-                            <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="₽" 
-                                          FontSize="32" 
-                                          Foreground="#606060"
+                                          FontSize="24" 
+                                          Foreground="#808080"
                                           VerticalAlignment="Center"
-                                          Margin="0,0,10,0"/>
+                                          Margin="5,0,8,0"/>
                                 <TextBox x:Name="AmountBox"
                                         Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
                                         Background="Transparent"
                                         Foreground="#E0E0E0"
                                         BorderThickness="0"
-                                        FontSize="36"
+                                        FontSize="24"
                                         FontWeight="Bold"
-                                        Padding="30,0,0,0"
                                         VerticalContentAlignment="Center"
-                                        CaretBrush="White"/>
-                            </Grid>
+                                        CaretBrush="White"
+                                        MinWidth="150"/>
+                            </StackPanel>
                         </Border>
                         
                         <!-- DATE -->
@@ -309,10 +323,13 @@
                                 Opacity="0.5"
                                 CaretBrush="White"/>
                     </StackPanel>
-                </Grid>
+                        </Grid>
+                        
+                    </StackPanel>
+                </ScrollViewer>
                 
                 <!-- FOOTER ACTIONS -->
-                <Grid Grid.Row="3" Margin="0,25,0,0">
+                <Grid Grid.Row="1" Margin="0,15,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -378,62 +395,15 @@
                         </Button.Template>
                     </Button>
                     
-                    <!-- EXECUTE (Primary Action) -->
+                    <!-- EXECUTE (Primary Action - Dark Gradient) -->
                     <Button Grid.Column="4"
                            Command="{Binding AddTransactionCommand}"
-                           Foreground="Black"
-                           BorderBrush="#808080"
-                           BorderThickness="1"
-                           Padding="35,12"
-                           FontSize="14"
-                           FontWeight="Bold"
-                           Cursor="Hand">
-                        <Button.Content>
-                            <TextBlock>
-                                <Run Text="⚡ "/>
-                                <Run Text="{loc:Translate Key=Btn_Execute}"/>
-                            </TextBlock>
-                        </Button.Content>
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientStop Color="#E0E0E0" Offset="0"/>
-                                            <GradientStop Color="#C0C0C0" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                   BorderBrush="{TemplateBinding BorderBrush}"
-                                                   BorderThickness="{TemplateBinding BorderThickness}"
-                                                   CornerRadius="6" 
-                                                   Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <Border.Effect>
-                                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="10" Opacity="0"/>
-                                                </Border.Effect>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Color="#FFFFFF" Offset="0"/>
-                                                    <GradientStop Color="#E0E0E0" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                           Style="{StaticResource DarkGradientButton}"
+                           Padding="35,12">
+                        <TextBlock>
+                            <Run Text="⚡ "/>
+                            <Run Text="{loc:Translate Key=Btn_Execute}"/>
+                        </TextBlock>
                     </Button>
                 </Grid>
                 

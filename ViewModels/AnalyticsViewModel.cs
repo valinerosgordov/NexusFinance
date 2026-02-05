@@ -6,9 +6,13 @@ using NexusFinance.Services;
 
 namespace NexusFinance.ViewModels;
 
+/// <summary>
+/// Analytics ViewModel - provides advanced financial visualizations and correlations.
+/// Implements Clean Architecture with dependency injection.
+/// </summary>
 public partial class AnalyticsViewModel : ObservableObject
 {
-    private readonly DataService _dataService;
+    private readonly IDataService _dataService;
     private readonly SankeyService _sankeyService;
     private readonly CorrelationService _correlationService;
     
@@ -24,32 +28,58 @@ public partial class AnalyticsViewModel : ObservableObject
     [ObservableProperty]
     private string _selectedPeriod = "Last 30 Days";
     
-    public AnalyticsViewModel(DataService dataService)
+    public AnalyticsViewModel() : this(ServiceContainer.Instance.DataService)
     {
-        _dataService = dataService;
+    }
+
+    public AnalyticsViewModel(IDataService dataService)
+    {
+        _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
         _sankeyService = new SankeyService();
         _correlationService = new CorrelationService();
         
-        LoadAnalytics();
+        try
+        {
+            LoadAnalytics();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "AnalyticsViewModel.Constructor");
+        }
     }
     
     private void LoadAnalytics()
     {
-        LoadSankeyData();
-        LoadCorrelationMatrix();
+        try
+        {
+            LoadSankeyData();
+            LoadCorrelationMatrix();
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "AnalyticsViewModel.LoadAnalytics");
+        }
     }
     
     private void LoadSankeyData()
     {
-        var transactions = _dataService.GetTransactions().ToList();
-        var accounts = _dataService.GetAccounts().ToList();
-        
-        // Filter by selected period
-        var filteredTransactions = FilterByPeriod(transactions);
-        
-        SankeyData = _sankeyService.GenerateSankeyFromTransactions(
-            filteredTransactions, 
-            accounts);
+        try
+        {
+            var transactions = _dataService.GetTransactions().ToList();
+            var accounts = _dataService.GetAccounts().ToList();
+            
+            // Filter by selected period
+            var filteredTransactions = FilterByPeriod(transactions);
+            
+            SankeyData = _sankeyService.GenerateSankeyFromTransactions(
+                filteredTransactions, 
+                accounts);
+        }
+        catch (Exception ex)
+        {
+            GlobalExceptionHandler.Instance.LogError(ex, "AnalyticsViewModel.LoadSankeyData");
+            SankeyData = new SankeyData(); // Empty state
+        }
     }
     
     private void LoadCorrelationMatrix()
